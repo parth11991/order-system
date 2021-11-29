@@ -16,7 +16,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "nesbot/carbon": "^2.50",
-        "onfuro/linnworks": "^0.6",
+        "onfuro/linnworks": "^0.7",
         "spatie/laravel-permission": "^3.11",
         "techguy/laravel-ckeditor": "^1.4",
         "yajra/laravel-datatables-oracle": "~9.0"

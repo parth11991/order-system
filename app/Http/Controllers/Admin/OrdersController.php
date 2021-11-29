@@ -83,7 +83,6 @@ class OrdersController extends Controller
             }else{
                 $model = orders::with('creator');
             }
-            
 
             return Datatables::eloquent($model)
                 ->addColumn('action', function (orders $data) {
