@@ -24,6 +24,11 @@ class Permission extends ModelsPermission
             'create order',
             'edit order',
             'delete order',
+
+            'view company',
+            'create company',
+            'edit company',
+            'delete company',
         ];
     }
 
