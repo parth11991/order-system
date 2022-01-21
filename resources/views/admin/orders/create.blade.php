@@ -37,10 +37,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Suppliers &nbsp;</label>
+                            <label>Supplier &nbsp;</label>
                             <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id">
                                 @foreach ($suppliers as $supplier)
                                     <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company &nbsp;</label>
+                            <select class="form-control select2" id="company_id" name="company_id" required autocomplete="company_id">
+                                @foreach ($companies as $company)
+                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\orders;
+use App\Company;
 use App\User;
 
 use App\Http\Controllers\Controller;
@@ -223,7 +224,8 @@ class OrdersController extends Controller
     public function create()
     {
         $suppliers = User::role('supplier')->get(); 
-        return view('admin.orders.create',compact('suppliers'));
+        $companies = Company::all(); 
+        return view('admin.orders.create',compact('suppliers','companies'));
     }
 
     /**
@@ -301,6 +303,7 @@ class OrdersController extends Controller
             }
             
             $orders->supplier_id = $request->supplier_id;
+            $orders->company_id = $request->company_id;
             $orders->price = $request->price;
             $orders->qty = $request->qty;
             //$orders->due_date = Carbon::parse($request->due_date);
@@ -348,7 +351,8 @@ class OrdersController extends Controller
     public function edit(orders $order)
     {
         $suppliers = User::role('supplier')->get(); 
-        return view('admin.orders.edit', compact("order",'suppliers'));
+        $companies = Company::all(); 
+        return view('admin.orders.edit', compact("order",'suppliers','companies'));
     }
 
     /**
@@ -403,6 +407,7 @@ class OrdersController extends Controller
             }
             
             $order->supplier_id = $request->supplier_id;
+            $order->company_id = $request->company_id;
             $order->price = $request->price;
             $order->qty = $request->qty;
             $order->due_date = Carbon::parse($request->due_date);

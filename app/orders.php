@@ -21,7 +21,7 @@ class orders extends Model
      * @var array
      */
     protected $fillable = [
-        'sku', 'item_title', 'price', 'order_date', 'due_date', 'image', 'qty', 'supplier_id', 'created_by', 'updated_by',
+        'sku', 'item_title', 'price', 'order_date', 'due_date', 'image', 'qty', 'supplier_id','company_id', 'created_by', 'updated_by',
     ];
 
     /**
@@ -30,6 +30,14 @@ class orders extends Model
     public function supplier()
     {
         return $this->belongsTo(User::class,'supplier_id');   
+    }
+
+    /**
+     * Get the linnworks that owns the user.
+     */
+    public function company()
+    {
+        return $this->belongsTo(User::class,'company_id');   
     }
 
     /**

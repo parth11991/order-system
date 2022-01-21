@@ -48,6 +48,15 @@
                             </div>
 
                             <div class="form-group">
+                                <label>Company &nbsp;</label>
+                                <select class="form-control select2" id="company_id" name="company_id" required autocomplete="company_id">
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}" @if($company->id==$order->company_id) selected @endif>{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group">
                                 <label>Price</label>
                                 <div class="input-group">
                                   <div class="input-group-prepend">
