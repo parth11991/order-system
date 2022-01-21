@@ -53,4 +53,12 @@ class orders extends Model
     public function editor(){
         return $this->belongsTo(User::class,'updated_by');
     }
+
+    /**
+     * The users permission that belong to the order.
+     */
+    public function users_permission()
+    {
+        return $this->belongsToMany(User::class, 'user_has_orders', 'order_id','user_id');
+    }
 }
