@@ -55,12 +55,28 @@
                         </div>
 
                         <div class="form-group">
+                            <label>Currency</label>
+                            <input type="text" name="currency" class="form-control" required autocomplete="currency" value="GBP" autofocus>
+                        </div>
+
+                        <div class="form-group">
                             <label>Price</label>
                             <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text">GBP</span>
-                              </div>
                               <input type="number" min="0.00" step="0.05" value="" required id="price" name="price" class="form-control" placeholder="Price">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Old Price</label>
+                            <div class="input-group">
+                              <input type="number" min="0.00" step="0.05" value="" required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>New Price</label>
+                            <div class="input-group">
+                              <input type="number" min="0.00" step="0.05" value="" required id="new_price" name="new_price" class="form-control" placeholder="New Price">
                             </div>
                         </div>
 
@@ -113,6 +129,11 @@
 
     $("#supplier_id").select2({
       placeholder: "Select Supplier",
+      allowClear: true
+    });
+
+    $("#currency").select2({
+      placeholder: "Select Currency",
       allowClear: true
     });
 

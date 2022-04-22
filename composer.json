@@ -11,6 +11,7 @@
         "php": "^7.3|^8.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
+        "gentritxhema/laravel-currency": "dev-master",
         "laravel/framework": "^8.0",
         "laravel/passport": "^10.1",
         "laravel/tinker": "^2.0",

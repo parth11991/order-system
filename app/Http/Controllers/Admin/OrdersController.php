@@ -305,6 +305,9 @@ class OrdersController extends Controller
             $orders->supplier_id = $request->supplier_id;
             $orders->company_id = $request->company_id;
             $orders->price = $request->price;
+            $orders->new_price = $request->new_price;
+            $orders->old_price = $request->old_price;
+            $orders->currency = $request->currency;
             $orders->qty = $request->qty;
             //$orders->due_date = Carbon::parse($request->due_date);
             $orders->created_by = auth()->user()->id;
@@ -409,6 +412,9 @@ class OrdersController extends Controller
             $order->supplier_id = $request->supplier_id;
             $order->company_id = $request->company_id;
             $order->price = $request->price;
+            $order->new_price = $request->new_price;
+            $order->old_price = $request->old_price;
+            $order->currency = $request->currency;
             $order->qty = $request->qty;
             $order->due_date = Carbon::parse($request->due_date);
             $order->status = $request->status;

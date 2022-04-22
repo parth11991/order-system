@@ -57,20 +57,34 @@
                             </div>
 
                             <div class="form-group">
+                                <label>Currency</label>
+                                <input type="text" name="currency" class="form-control" required autocomplete="currency" value="{{$order->currency}}" autofocus>
+                            </div>
+
+                            <div class="form-group">
                                 <label>Price</label>
                                 <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">GBP</span>
-                                  </div>
                                   <input type="number" min="0.00" step="0.05" value="{{$order->price}}" required id="price" name="price" class="form-control" placeholder="Price">
                                 </div>
                             </div>
 
                             <div class="form-group">
+                                <label>Old Price</label>
+                                <div class="input-group">
+                                  <input type="number" min="0.00" step="0.05" value="{{$order->old_price}}"  required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>New Price</label>
+                                <div class="input-group">
+                                  <input type="number" min="0.00" step="0.05" value="{{$order->new_price}}"  required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label>Qty</label>
                                 <input type="number" name="qty" class="form-control" required autocomplete="qty" value="{{$order->qty}}" autofocus>
                             </div>  
-                        </div>
                         
 
                         <div class="form-group">
@@ -139,6 +153,11 @@
 
     $("#status").select2({
       placeholder: "Select Status",
+      allowClear: true
+    });
+
+    $("#currency").select2({
+      placeholder: "Select Currency",
       allowClear: true
     });
 
