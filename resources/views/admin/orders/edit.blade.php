@@ -57,28 +57,53 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Currency</label>
-                                <input type="text" name="currency" class="form-control" required autocomplete="currency" value="{{$order->currency}}" autofocus>
-                            </div>
-
-                            <div class="form-group">
                                 <label>Price</label>
                                 <div class="input-group">
-                                  <input type="number" min="0.00" step="0.05" value="{{$order->price}}" required id="price" name="price" class="form-control" placeholder="Price">
+                                    <div class="col-2">
+                                        <select class="form-control select2" id="currency" name="currency" required autocomplete="currency">
+                                            <option value="GBP" @if($order->currency=='GBP') selected @endif>GBP</option>
+                                            <option value="USD" @if($order->currency=='USD') selected @endif>USD</option>
+                                            <option value="EURO" @if($order->currency=='EURO') selected @endif>EURO</option>
+                                            <option value="RMB" @if($order->currency=='RMB') selected @endif>RMB</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-10">
+                                        <input type="number" min="0.00" value="{{$order->price}}" required id="price" name="price" class="form-control" placeholder="Price">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label>Old Price</label>
                                 <div class="input-group">
-                                  <input type="number" min="0.00" step="0.05" value="{{$order->old_price}}"  required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                                    <div class="col-2">
+                                        <select class="form-control select2" id="old_price_currency" name="old_price_currency" required autocomplete="old_price_currency">
+                                            <option value="GBP" @if($order->old_price_currency=='GBP') selected @endif>GBP</option>
+                                            <option value="USD" @if($order->old_price_currency=='USD') selected @endif>USD</option>
+                                            <option value="EURO" @if($order->old_price_currency=='EURO') selected @endif>EURO</option>
+                                            <option value="RMB" @if($order->old_price_currency=='RMB') selected @endif>RMB</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-10">
+                                        <input type="number" min="0.00" value="{{$order->old_price}}"  required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label>New Price</label>
                                 <div class="input-group">
-                                  <input type="number" min="0.00" step="0.05" value="{{$order->new_price}}"  required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                                    <div class="col-2">
+                                        <select class="form-control select2" id="new_price_currency" name="new_price_currency" required autocomplete="new_price_currency">
+                                            <option value="GBP" @if($order->new_price_currency=='GBP') selected @endif>GBP</option>
+                                            <option value="USD" @if($order->new_price_currency=='USD') selected @endif>USD</option>
+                                            <option value="EURO" @if($order->new_price_currency=='EURO') selected @endif>EURO</option>
+                                            <option value="RMB" @if($order->new_price_currency=='RMB') selected @endif>RMB</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-10">
+                                        <input type="number" min="0.00" step="0.05" value="{{$order->new_price}}"  required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -158,7 +183,17 @@
 
     $("#currency").select2({
       placeholder: "Select Currency",
-      allowClear: true
+      allowClear: false
+    });
+
+    $("#old_price_currency").select2({
+      placeholder: "Select Currency",
+      allowClear: false
+    });
+
+    $("#new_price_currency").select2({
+      placeholder: "Select Currency",
+      allowClear: false
     });
 
     @if(auth()->user()->hasRole('supplier'))

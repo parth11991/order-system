@@ -55,29 +55,56 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Currency</label>
-                            <input type="text" name="currency" class="form-control" required autocomplete="currency" value="GBP" autofocus>
-                        </div>
-
-                        <div class="form-group">
                             <label>Price</label>
                             <div class="input-group">
-                              <input type="number" min="0.00" step="0.05" value="" required id="price" name="price" class="form-control" placeholder="Price">
+                                <div class="col-2">
+                                    <select class="form-control select2" id="currency" name="currency" required autocomplete="currency">
+                                        <option value="GBP" selected>GBP</option>
+                                        <option value="USD">USD</option>
+                                        <option value="EURO">EURO</option>
+                                        <option value="RMB">RMB</option>
+                                    </select>
+                                </div>
+                                <div class="col-10">
+                                  <input type="number" min="0.00" value="" required id="price" name="price" class="form-control" placeholder="Price">
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Old Price</label>
                             <div class="input-group">
-                              <input type="number" min="0.00" step="0.05" value="" required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                              
+                                <div class="col-2">
+                                    <select class="form-control select2" id="old_price_currency" name="old_price_currency" required autocomplete="old_price_currency">
+                                        <option value="GBP" selected>GBP</option>
+                                        <option value="USD">USD</option>
+                                        <option value="EURO">EURO</option>
+                                        <option value="RMB">RMB</option>
+                                    </select>
+                                </div>
+                                <div class="col-10">
+                                    <input type="number" min="0.00" value="" required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>New Price</label>
                             <div class="input-group">
-                              <input type="number" min="0.00" step="0.05" value="" required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                              <div class="col-2">
+                                    <select class="form-control select2" id="new_price_currency" name="new_price_currency" required autocomplete="new_price_currency">
+                                        <option value="GBP" selected>GBP</option>
+                                        <option value="USD">USD</option>
+                                        <option value="EURO">EURO</option>
+                                        <option value="RMB">RMB</option>
+                                    </select>
+                                </div>
+                                <div class="col-10">
+                                    <input type="number" min="0.00" value="" required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                                </div>
                             </div>
+
                         </div>
 
                         <div class="form-group">
@@ -134,7 +161,17 @@
 
     $("#currency").select2({
       placeholder: "Select Currency",
-      allowClear: true
+      allowClear: false
+    });
+
+    $("#old_price_currency").select2({
+      placeholder: "Select Currency",
+      allowClear: false
+    });
+
+    $("#new_price_currency").select2({
+      placeholder: "Select Currency",
+      allowClear: false
     });
 
 </script>

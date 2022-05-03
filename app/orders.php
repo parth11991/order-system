@@ -21,7 +21,7 @@ class orders extends Model
      * @var array
      */
     protected $fillable = [
-        'sku', 'item_title', 'currency', 'price', 'new_price', 'old_price','order_date', 'due_date', 'image', 'qty', 'supplier_id','company_id', 'created_by', 'updated_by',
+        'sku', 'item_title', 'currency', 'old_price_currency','new_price_currency', 'price', 'new_price', 'old_price','order_date', 'due_date', 'image', 'qty', 'supplier_id','company_id', 'created_by', 'updated_by',
     ];
 
     /**

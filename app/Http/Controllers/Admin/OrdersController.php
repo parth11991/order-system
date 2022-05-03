@@ -308,6 +308,8 @@ class OrdersController extends Controller
             $orders->new_price = $request->new_price;
             $orders->old_price = $request->old_price;
             $orders->currency = $request->currency;
+            $orders->old_price_currency = $request->old_price_currency;
+            $orders->new_price_currency = $request->new_price_currency;
             $orders->qty = $request->qty;
             //$orders->due_date = Carbon::parse($request->due_date);
             $orders->created_by = auth()->user()->id;
@@ -415,6 +417,8 @@ class OrdersController extends Controller
             $order->new_price = $request->new_price;
             $order->old_price = $request->old_price;
             $order->currency = $request->currency;
+            $order->old_price_currency = $request->old_price_currency;
+            $order->new_price_currency = $request->new_price_currency;
             $order->qty = $request->qty;
             $order->due_date = Carbon::parse($request->due_date);
             $order->status = $request->status;
