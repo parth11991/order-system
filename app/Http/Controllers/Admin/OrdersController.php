@@ -79,10 +79,12 @@ class OrdersController extends Controller
         if ($request->ajax() == true) {
 
             $user_id = auth()->user()->id;
-            if(!auth()->user()->hasRole('superadmin')){
-                $model = orders::where('created_by', $user_id);
-            }else{
+            if(auth()->user()->hasRole('superadmin')){
                 $model = orders::with('creator');
+            }elseif(auth()->user()->hasRole('admin')){
+                $model = orders::with('creator');
+            }else{
+                $model = orders::where('created_by', $user_id);
             }
 
             return Datatables::eloquent($model)
