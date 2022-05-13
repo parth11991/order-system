@@ -15,11 +15,11 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{ route('admin.order.update', ['order' => $order->id]) }}" method="put"  id="popup-form" >
+                    <form action="{{ route('admin.order.update_supplier', ['order' => $order->id]) }}" method="put"  id="popup-form" >
                         @csrf
                         @method('PUT')
-                        <div @if(auth()->user()->hasRole('supplier')) style="display:none;" @endif>
-                            <div class="form-group">
+                        <div>
+                            <!-- <div class="form-group">
                                 <label>Search Item</label>
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" name="search"  placeholder="Search item" autocomplete="search" id="search" autofocus maxlength="200">
@@ -27,9 +27,9 @@
                                         <button class="btn btn-outline-secondary" type="button" onclick="funSearchItems()"><i class="fas fa-search"></i></button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <div id="item_list">
+                            <div id="item_list" style="display:none;">
                                 <div class="form-group">
                                     <label>Select Item</label>
                                     <select class="form-control select2" id="item" name="item" required autocomplete="name" >
@@ -38,7 +38,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label>Suppliers &nbsp;</label>
                                 <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id">
                                     @foreach ($suppliers as $supplier)
@@ -47,7 +47,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label>Company &nbsp;</label>
                                 <select class="form-control select2" id="company_id" name="company_id" required autocomplete="company_id">
                                     @foreach ($companies as $company)
@@ -106,13 +106,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label>Qty</label>
                                 <input type="number" name="qty" class="form-control" required autocomplete="qty" value="{{$order->qty}}" autofocus>
                             </div>  
                         
 
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;">
                             <label>Due Date</label>
                             <input type="date" name="due_date" class="form-control" autocomplete="due_date" autofocus value="{{$order->due_date}}">
                         </div>

@@ -53,6 +53,8 @@
                                 <th>Status</th>
                                 @if(!auth()->user()->hasRole('supplier'))
                                 <th class="noExport" style="width: 100px;">Action</th>
+                                @else
+                                <th class="noExport" style="width: 100px;">Action</th>
                                 @endif
                             </tr>
                             </thead>
@@ -83,6 +85,12 @@ function datatables() {
                             {data: 'due_date', name: 'due_date'},
                             {data: 'order_date', name: 'order_date'},
                             {data: 'order_status', name: 'order_status'},
+                            {data: 'action', name: 'action', orderable: false, searchable: false,
+                                fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+                                    //  console.log( nTd );
+                                    $("a", nTd).tooltip({container: 'body'});
+                                }
+                            }
                             
                         ];
     }else{

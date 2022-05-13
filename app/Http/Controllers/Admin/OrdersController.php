@@ -159,12 +159,12 @@ class OrdersController extends Controller
                     ->addColumn('action', function (orders $data) {
                         $html='';
                         if (auth()->user()->can('edit order')){
-                            $html.= '<a href="'.  route('admin.order.edit', ['order' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-3"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
+                            $html.= '<a href="'.  route('admin.order.edit_supplier', ['order' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-3"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
                         }
 
-                        if (auth()->user()->can('delete order')){
+                        /*if (auth()->user()->can('delete order')){
                             $html.= '<form method="post" class="float-left delete-form" action="'.  route('admin.order.destroy', ['order' => $data->id ]) .'"><input type="hidden" name="_token" value="'. Session::token() .'"><input type="hidden" name="_method" value="delete"><button type="submit" class="btn btn-danger btn-sm"><span tooltip="Delete" flow="up"><i class="fas fa-trash"></i></span></button></form>';
-                        }
+                        }*/
 
                         return $html; 
                     })
@@ -362,6 +362,20 @@ class OrdersController extends Controller
         return view('admin.orders.edit', compact("order",'suppliers','companies'));
     }
 
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\orders  $orders
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_supplier(orders $order)
+    {
+        $suppliers = User::role('supplier')->get(); 
+        $companies = Company::all(); 
+        return view('admin.orders.edit_supplier', compact("order",'suppliers','companies'));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -382,12 +396,12 @@ class OrdersController extends Controller
             }
 
             $StockItemId = $request->item;
+            
             $linnworks = Linnworks_API::make([
                         'applicationId' => env('LINNWORKS_APP_ID'),
                         'applicationSecret' => env('LINNWORKS_SECRET'),
                         'token' => env('LINNWORKS_TOKEN'),
                     ], $this->client);
-
             $itemData = $linnworks->Inventory()->GetInventoryItemById($StockItemId);
 
             $order->item_id = $StockItemId;
@@ -425,6 +439,92 @@ class OrdersController extends Controller
             $order->due_date = Carbon::parse($request->due_date);
             $order->status = $request->status;
             $order->updated_by = auth()->user()->id;
+            $order->save();
+
+            //Session::flash('success', 'A branch updated successfully.');
+            //return redirect('admin/branch');
+
+            return response()->json([
+                'success' => 'order update successfully.' // for status 200
+            ]);
+
+        } catch (\Exception $exception) {
+
+            DB::rollBack();
+
+            //Session::flash('failed', $exception->getMessage() . ' ' . $exception->getLine());
+            /*return redirect()->back()->withInput($request->all());*/
+
+            return response()->json([
+                'error' => $exception->getMessage() . ' ' . $exception->getLine() // for status 200
+            ]);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\orders  $orders
+     * @return \Illuminate\Http\Response
+     */
+    public function update_supplier(Request $request, orders $order)
+    {
+        try {
+
+            if (empty($order)) {
+                //Session::flash('failed', 'branch Update Denied');
+                //return redirect()->back();
+                return response()->json([
+                    'error' => 'order update denied.' // for status 200
+                ]);   
+            }
+
+            /*$StockItemId = $request->item;
+            $linnworks = Linnworks_API::make([
+                        'applicationId' => env('LINNWORKS_APP_ID'),
+                        'applicationSecret' => env('LINNWORKS_SECRET'),
+                        'token' => env('LINNWORKS_TOKEN'),
+                    ], $this->client);
+
+            $itemData = $linnworks->Inventory()->GetInventoryItemById($StockItemId);
+
+            $order->item_id = $StockItemId;
+            $order->sku = $itemData['ItemNumber'];
+            $order->item_title = $itemData['ItemTitle'];
+
+            $itemImage = $linnworks->Inventory()->GetInventoryItemImages($StockItemId);
+            if(isset($itemImage[0]['FullSource'])){
+              $order->image = $itemImage[0]['FullSource'];  
+            }else{
+              $order->image = asset("/public/image/no_image.jpg"); 
+            }
+
+            $propertyParams = [
+                                "PropertyName"=> "MPN",
+                                "PropertyType"=> "Attribute"
+                            ];
+            $itemExtendedProperties = $linnworks->Inventory()->GetInventoryItemExtendedProperties($StockItemId,$propertyParams);
+
+            if(isset($itemExtendedProperties[0]['PropertyValue'])){
+                $order->customer_sku = $itemExtendedProperties[0]['PropertyValue'];
+            }else{
+                $order->customer_sku = $itemData['ItemNumber'];
+            }*/
+            
+            /*$order->supplier_id = $request->supplier_id;
+            $order->company_id = $request->company_id;*/
+            $order->price = $request->price;
+            $order->new_price = $request->new_price;
+            $order->old_price = $request->old_price;
+            $order->currency = $request->currency;
+            $order->old_price_currency = $request->old_price_currency;
+            $order->new_price_currency = $request->new_price_currency;
+            $order->qty = $request->qty;
+            $order->due_date = Carbon::parse($request->due_date);
+            $order->status = $request->status;
+            $order->updated_by = auth()->user()->id;
+            //dd($order);
             $order->save();
 
             //Session::flash('success', 'A branch updated successfully.');
