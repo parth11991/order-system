@@ -44,6 +44,7 @@
                             <thead>
                             <tr>   
                                 <th>Item Image</th> 
+                                <th>Company</th> 
                                 <th>SKU</th>
                                 <th>Item Title</th>
                                 <th>Price</th>
@@ -78,6 +79,7 @@ function datatables() {
         var url = "{{ url('admin/order/ajax/data_supplier') }}";
         var columns = [
                             {data: 'item_img', name: 'item_img'},
+                            {data: 'company_name', name: 'company_name'},
                             {data: 'customer_sku', name: 'customer_sku'},
                             {data: 'item_title', name: 'item_title'},
                             {data: 'price', name: 'price'},
@@ -97,6 +99,7 @@ function datatables() {
         var url = "{{ url('admin/order/ajax/data') }}";
         var columns = [
                             {data: 'item_img', name: 'item_img'},
+                            {data: 'company_name', name: 'company_name'},
                             {data: 'sku', name: 'sku'},
                             {data: 'item_title', name: 'item_title'},
                             {data: 'price', name: 'price'},

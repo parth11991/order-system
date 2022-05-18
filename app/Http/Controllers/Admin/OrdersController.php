@@ -79,13 +79,25 @@ class OrdersController extends Controller
         if ($request->ajax() == true) {
 
             $user_id = auth()->user()->id;
+
+            $search = "%{$request->search['value']}%";
+
+            $constraint = function ($query) use ($search){
+                $query->where('name', 'like', $search);
+            };
+
             if(auth()->user()->hasRole('superadmin')){
-                $model = orders::with('creator');
+                $model = orders::with(['creator','company']);
             }elseif(auth()->user()->hasRole('admin')){
-                $model = orders::with('creator');
+                $model = orders::with(['creator','company']);
             }else{
-                $model = orders::where('created_by', $user_id);
+                $model = orders::with(['creator','company'])->where('created_by', $user_id);
             }
+
+            if($search!="%{}%"){
+                $model = $model->whereHas('company', $constraint)->orWhere('item_title', 'like', $search)->orWhere('sku', 'like', $search);
+            }
+            
 
             return Datatables::eloquent($model)
                 ->addColumn('action', function (orders $data) {
@@ -131,11 +143,17 @@ class OrdersController extends Controller
                     return Carbon::parse($data->created_at);
                 })
 
+                ->addColumn('company_name', function ($data) {
+                    if(isset($data->company->name)){
+                        return $data->company->name;
+                    }
+                })
+
                 ->addColumn('item_img', function ($data) {
                     return '<img src="'.$data->image.'" alt="Item Image" class="profile-user-img-small" style="width: 70px;height: 60px;">';
                 })
 
-                ->rawColumns(['item_img','order_date','order_status','action'])
+                ->rawColumns(['item_img','company_name','order_date','order_status','action'])
 
                 ->make(true);
         }

@@ -24,7 +24,7 @@ class CompanyStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:200|string',
+            'name' => 'required|max:200|string'
         ];
     }
 }
