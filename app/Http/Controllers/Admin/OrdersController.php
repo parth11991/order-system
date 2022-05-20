@@ -95,7 +95,7 @@ class OrdersController extends Controller
             }
 
             if($search!="%{}%"){
-                $model = $model->whereHas('company', $constraint)->orWhere('item_title', 'like', $search)->orWhere('sku', 'like', $search);
+                $model = $model->whereHas('company', $constraint)->orWhere('item_title', 'like', $search)->orWhere('sku', 'like', $search); 
             }
             
 
