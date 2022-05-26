@@ -295,7 +295,6 @@ class OrdersController extends Controller
                     ], $this->client);
 
             $itemData = $linnworks->Inventory()->GetInventoryItemById($StockItemId);
-            dd($itemData);
             $orders = new orders();
             $orders->item_id = $StockItemId;
             $orders->sku = $itemData['ItemNumber'];
