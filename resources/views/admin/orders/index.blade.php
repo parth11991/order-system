@@ -40,6 +40,7 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="table-responsive list-table-wrapper">
+                        <button onclick="exportTableToExcel('table')">Export Table Data To Excel File</button>
                         <table class="table table-hover dataTable no-footer" id="table" width="100%">
                             <thead>
                             <tr>   
@@ -118,7 +119,9 @@ function datatables() {
     
     var table = $('#table').DataTable({
         dom: 'RBfrtip',
-        buttons: [],
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
         select: true,
         
         aaSorting     : [[0, 'asc']],
@@ -139,6 +142,37 @@ function datatables() {
 }
 
 datatables();
+
+function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/csv';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
+}
 
 function funChangeStatus(id,status) {
     var checkRole = "{{auth()->user()->hasRole('supplier')}}";

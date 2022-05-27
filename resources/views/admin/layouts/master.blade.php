@@ -115,6 +115,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
 
         <script src="{{asset('public/adminLTE/plugins/fullcalendar/dist/fullcalendar.min.js')}}"></script>
+
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
     <!-- REQUIRED HEAD SCRIPTS [END]-->
     
 </head>
