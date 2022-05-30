@@ -130,13 +130,27 @@ class OrdersController extends Controller
 
                     return '<div class="dropdown action-label">
                             <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o '.$class.'"></i> '.$status.' </a>
-                            <div class="dropdown-menu dropdown-menu-right" style="">
+                            <div class="dropdown-menu dropdown-menu-right" style="" class="noExport">
                                 <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',0); return false;"><i class="fa fa-dot-circle-o text-danger"></i> new order</a>
                                 <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',1); return false;"><i class="fa fa-dot-circle-o text-warning"></i> confirmed</a>
                                 <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',2); return false;"><i class="fa fa-dot-circle-o text-info"></i> shipped</a>
                                 <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',3); return false;"><i class="fa fa-dot-circle-o text-success"></i> received</a>
                             </div>
                         </div>';
+                })
+
+                ->addColumn('status_field', function ($data) {
+                    if($data->status=='0'){    
+                        $status= 'new order';
+                    }elseif ($data->status=='1') {
+                        $status= 'confirmed';
+                    }elseif ($data->status=='2') {
+                        $status= 'shipped';
+                    }else{
+                        $status= 'received';
+                    }
+
+                    return $status;
                 })
 
                 ->addColumn('order_date', function ($data) {
@@ -150,10 +164,14 @@ class OrdersController extends Controller
                 })
 
                 ->addColumn('item_img', function ($data) {
-                    return '<img src="'.$data->image.'" alt="Item Image" class="profile-user-img-small" style="width: 70px;height: 60px;">';
+                    $path = $data->image;
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                    $imagedata = file_get_contents($path);
+                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                    return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
                 })
 
-                ->rawColumns(['item_img','company_name','order_date','order_status','action'])
+                ->rawColumns(['item_img','company_name','order_date','order_status','action','status_field'])
 
                 ->make(true);
         }

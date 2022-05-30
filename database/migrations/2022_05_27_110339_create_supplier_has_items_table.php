@@ -15,7 +15,12 @@ class CreateSupplierHasItemsTable extends Migration
     {
         Schema::create('supplier_has_items', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('item_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->timestamps();
+
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -26,6 +31,10 @@ class CreateSupplierHasItemsTable extends Migration
      */
     public function down()
     {
+        Schema::table('supplier_has_items', function (Blueprint $table) {
+            $table->dropForeign(['item_id']);
+            $table->dropForeign(['user_id']);
+        });
         Schema::dropIfExists('supplier_has_items');
     }
 }

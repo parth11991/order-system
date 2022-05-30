@@ -40,7 +40,7 @@
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="table-responsive list-table-wrapper">
-                        <button onclick="exportTableToExcel('table')">Export Table Data To Excel File</button>
+                        <!-- <button onclick="exportTableToExcel('table')">Export Table Data To Excel File</button> -->
                         <table class="table table-hover dataTable no-footer" id="table" width="100%">
                             <thead>
                             <tr>   
@@ -52,12 +52,14 @@
                                 <th>QTY</th>
                                 <th>Due Date</th>
                                 <th>Order Date</th>
-                                <th>Status</th>
+                                <th class="noExport">Status</th>
                                 @if(!auth()->user()->hasRole('supplier'))
                                 <th class="noExport" style="width: 100px;">Action</th>
                                 @else
                                 <th class="noExport" style="width: 100px;">Action</th>
                                 @endif
+
+                                <th>Status</th>
                             </tr>
                             </thead>
                             <tbody></tbody>
@@ -93,7 +95,8 @@ function datatables() {
                                     //  console.log( nTd );
                                     $("a", nTd).tooltip({container: 'body'});
                                 }
-                            }
+                            },
+                            {data: 'status_field', name: 'status_field',visible: false},
                             
                         ];
     }else{
@@ -113,15 +116,48 @@ function datatables() {
                                     //  console.log( nTd );
                                     $("a", nTd).tooltip({container: 'body'});
                                 }
-                            }
+                            },
+                            {data: 'status_field', name: 'status_field',visible: false},
                         ];
     }
     
     var table = $('#table').DataTable({
         dom: 'RBfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
+        buttons: [{
+                        extend: 'pdf',
+                        title: 'Order Data Export',
+                        exportOptions: {
+                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ]
+                        },
+                        customize: function(doc) {
+                           //find paths of all images, already in base64 format
+                           var arr2 = $('.img-fluid').map(function(){
+                                          return this.src;
+                                     }).get();
+                     
+                         for (var i = 0, c = 1; i < arr2.length; i++, c++) {
+                            console.log(doc);
+                                           doc.content[1].table.body[c][0] = {
+                                             image: arr2[i],
+                                             width: 100
+                                           }
+                                             }
+                         },
+                    },{
+                        extend: 'excel',
+                        title: 'Order Data Export',
+                        exportOptions: {
+                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ]
+                        },
+                        
+                    }, {
+                        extend: 'csv',
+                        title: 'Order Data Export',
+                        exportOptions: {
+                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ]
+                        }
+                    }
+                ],
         select: true,
         
         aaSorting     : [[0, 'asc']],

@@ -47,7 +47,7 @@
                         <li class="nav-item has-treeview {{ Route::is('admin.company.*') ? 'menu-open' : '' }}">
                             <a href="{{ route('admin.company.index') }}" class="nav-link {{ Route::is('admin.company.*') ? 'active' : '' }}">
                                 <i class="fas fa-file-alt nav-icon"></i>
-                                <p>company</p>
+                                <p>Company</p>
                             </a>
                         </li>
                         @endcan
@@ -60,6 +60,13 @@
                             </a>
                         </li>
                         @endcan
+
+                        <li class="nav-item has-treeview {{ Route::is('admin.item.*') ? 'menu-open' : '' }}">
+                            <a href="{{ route('admin.item.index') }}" class="nav-link {{ Route::is('admin.item.*') ? 'active' : '' }}">
+                                <i class="fas fa-list-alt nav-icon"></i>
+                                <p>Item</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>

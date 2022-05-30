@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Supplier_has_item;
 use App\Http\Requests\StoreSupplier_has_itemRequest;

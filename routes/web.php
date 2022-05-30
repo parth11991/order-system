@@ -90,5 +90,9 @@ Route::group([
     Route::resource('company', 'CompanyController');
     Route::get('company/ajax/data', 'CompanyController@datatables'); // For Datatables
 
+    // Item Routes
+    Route::resource('item', 'ItemController');
+    Route::get('item/ajax/data', 'ItemController@datatables'); // For Datatables
+
 });
 
