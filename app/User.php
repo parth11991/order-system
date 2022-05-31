@@ -130,4 +130,12 @@ class User extends Authenticatable
         return $this->belongsToMany(orders::class, 'user_has_orders', 'user_id', 'order_id');
     }
 
+    /**
+     * The item that belong to the user.
+     */
+    public function items()
+    {
+        return $this->belongsToMany(item::class, 'supplier_has_items', 'user_id', 'item_id');
+    }
+
 }
