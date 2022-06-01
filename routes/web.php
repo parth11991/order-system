@@ -84,6 +84,7 @@ Route::group([
     Route::get('order/ajax/data_supplier', 'OrdersController@datatables_supplier'); // For Datatables
     Route::get('order/ajax/change_status', 'OrdersController@change_status')->name('order.ajax.change_status'); // For change status
     Route::get('order/ajax/search_items', 'OrdersController@search_items')->name('order.ajax.search_items'); // For search items
+    Route::get('order/ajax/search_suppliers', 'OrdersController@search_suppliers')->name('order.ajax.search_suppliers');
 
 
     // Company Routes
@@ -93,6 +94,8 @@ Route::group([
     // Item Routes
     Route::resource('item', 'ItemController');
     Route::get('item/ajax/data', 'ItemController@datatables'); // For Datatables
-
+    Route::get('item/ajax/search_items', 'ItemController@search_items')->name('item.ajax.search_items'); 
+    Route::get('item/ajax/search_suppliers', 'ItemController@search_suppliers')->name('item.ajax.search_suppliers'); 
+    
 });
 

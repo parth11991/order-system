@@ -61,12 +61,14 @@
                         </li>
                         @endcan
 
+                        @if(auth()->user()->hasRole('superadmin')||auth()->user()->hasRole('admin'))
                         <li class="nav-item has-treeview {{ Route::is('admin.item.*') ? 'menu-open' : '' }}">
                             <a href="{{ route('admin.item.index') }}" class="nav-link {{ Route::is('admin.item.*') ? 'active' : '' }}">
                                 <i class="fas fa-list-alt nav-icon"></i>
                                 <p>Item</p>
                             </a>
                         </li>
+                        @endif
 
                     </ul>
                 </li>

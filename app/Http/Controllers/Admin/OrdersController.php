@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\orders;
 use App\Company;
 use App\User;
+use App\item;
 
 use App\Http\Controllers\Controller;
 use App\Traits\UploadTrait;
@@ -275,7 +276,7 @@ class OrdersController extends Controller
     public function search_items(Request $request)
     {
         $keyWord = $request->keyword;
-
+        //dd(env('LINNWORKS_APP_ID'));
         $linnworks = Linnworks_API::make([
                         'applicationId' => env('LINNWORKS_APP_ID'),
                         'applicationSecret' => env('LINNWORKS_SECRET'),
@@ -285,7 +286,7 @@ class OrdersController extends Controller
         $getStockItems = $linnworks->Stock()->getStockItems($keyWord,"",5000,1,true,true,true);
         $html='<div class="form-group">
                     <label>Select Item</label>
-                    <select class="form-control select2" id="item" name="item" required autocomplete="name">';
+                    <select class="form-control select2" id="item" name="item" required autocomplete="name"  onchange="funSearchSuppliers()"><option value=""></option>';
                             foreach ($getStockItems['Data'] as $item) {
                                 $html.='<option value="'.$item['StockItemId'].'">'.$item['ItemNumber'].'-'.$item['ItemTitle'].'</option>';
                             }
@@ -297,6 +298,37 @@ class OrdersController extends Controller
     }
 
     /**
+     * Datatables Ajax Data
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function search_suppliers(Request $request)
+    {
+        $keyWord = $request->keyword;
+        $items = item::where('item_id',$keyWord)->with(['users'])->first();
+        
+        if(isset($items->users)){
+            $user_arr = $items->users->pluck('id')->toArray();
+        }else{
+            $user_arr = array();
+        }
+        
+        $suppliers = User::role('supplier')->orderByRaw("field(id,".implode(',',$user_arr).") desc")->get(); 
+
+        $html='<div class="form-group">
+                    <label>Supplier &nbsp;</label>
+                    <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id"><option value=""></option>';
+                            foreach ($suppliers as $supplier) {
+                                $html.='<option value="'.$supplier->id.'">'.$supplier->name.'</option>';
+                            }
+                    $html.='</select>
+                </div>';
+
+        return $html;
+    }   
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -305,7 +337,9 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         try {
+
             $StockItemId = $request->item;
+
             $linnworks = Linnworks_API::make([
                         'applicationId' => env('LINNWORKS_APP_ID'),
                         'applicationSecret' => env('LINNWORKS_SECRET'),
@@ -352,6 +386,23 @@ class OrdersController extends Controller
             $orders->created_by = auth()->user()->id;
             $orders->updated_by = auth()->user()->id;
             $orders->save();
+
+            $item = item::where('item_id',$StockItemId)->with(['users'])->first();
+        
+            if(isset($item)){
+                if(count($item->users)==0 || !in_array($request->supplier_id, $item->users->pluck('id')->toArray())){
+                    $item->users()->attach($request->supplier_id);
+                }
+            }else{
+                $item = new item();
+                $item->item_id = $StockItemId;
+                $item->sku = $itemData['ItemNumber'];
+                $item->title = $itemData['ItemTitle'];
+                $item->save();
+
+                $item->users()->attach($request->supplier_id);
+            }
+            
 
             //Session::flash('success', 'folder settings was created successfully.');
             //return redirect()->route('print_buttons.index');
@@ -476,6 +527,16 @@ class OrdersController extends Controller
             $order->updated_by = auth()->user()->id;
             $order->save();
 
+            $item = item::where('item_id',$StockItemId)->whereRelation('users', 'users.id', $request->supplier_id)->get();
+            if(count($item)==0){
+                $item = new item();
+                $item->item_id = $StockItemId;
+                $item->sku = $itemData['ItemNumber'];
+                $item->title = $itemData['ItemTitle'];
+                $item->save();
+
+                $item->users()->attach($request->supplier_id);
+            }
             //Session::flash('success', 'A branch updated successfully.');
             //return redirect('admin/branch');
 

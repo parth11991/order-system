@@ -9,14 +9,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreitemRequest;
 use App\Http\Requests\UpdateitemRequest;
 use App\Traits\UploadTrait;
-
+use App\Notifications\packingwavesCompletedNotification;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
+
+use Yajra\DataTables\Facades\DataTables;
+use Onfuro\Linnworks\Linnworks as Linnworks_API;
+use Carbon\Carbon;
+use Notification;
+use Redirect;
 
 class ItemController extends Controller
 {
@@ -91,14 +96,6 @@ class ItemController extends Controller
                         $html.= '<a href="'.  route('admin.item.edit', ['item' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-1"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
                     //}
 
-                    //if (auth()->user()->can('delete Item')){
-                        $html.= '<form method="post" class="float-left delete-formleft mr-1" action="'.  route('admin.item.destroy', ['item' => $data->id ]) .'"><input type="hidden" name="_token" value="'. Session::token() .'"><input type="hidden" name="_method" value="delete"><button type="submit" class="btn btn-danger btn-sm"><span tooltip="Delete" flow="up"><i class="fas fa-trash"></i></span></button></form>';
-                    //}
-
-                    //if (auth()->user()->can('view Item')){
-                        $html.= '<a href="'.  route('admin.item.show', ['item' => $data->id]) .'" id="popup-modal-button"  class="btn btn-danger btn-sm"><span tooltip="View" flow="up"><i class="fas fa-eye"></i></span></a>';
-                    //}
-
                     return $html; 
                 
                 })
@@ -124,6 +121,40 @@ class ItemController extends Controller
      * @return mixed
      * @throws \Exception
      */
+    public function search_suppliers(Request $request)
+    {
+        $keyWord = $request->keyword;
+        $items = item::where('item_id',$keyWord)->with(['users'])->first();
+        
+        if(isset($items->users)){
+            $user_arr = $items->users->pluck('id')->toArray();
+        }else{
+            $user_arr = array();
+        }
+        
+        $suppliers = User::role('supplier')->get(); 
+
+        $html='<div class="form-group">
+                    <label>Supplier &nbsp;</label>
+                    <select class="form-control select2" id="user_id" name="user_id[]" required autocomplete="user_id" multiple><option value=""></option>';
+                            foreach ($suppliers as $supplier) {
+                                if(!in_array($supplier->id, $user_arr)){
+                                    $html.='<option value="'.$supplier->id.'">'.$supplier->name.'</option>';
+                                }
+                            }
+                    $html.='</select>
+                </div>';
+
+        return $html;
+        
+    }
+
+    /**
+     * Datatables Ajax Data
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public function search_items(Request $request)
     {
         $keyWord = $request->keyword;
@@ -137,7 +168,7 @@ class ItemController extends Controller
         $getStockItems = $linnworks->Stock()->getStockItems($keyWord,"",5000,1,true,true,true);
         $html='<div class="form-group">
                     <label>Select Item</label>
-                    <select class="form-control select2" id="item" name="item" required autocomplete="name">';
+                    <select class="form-control select2" id="item" name="item" required autocomplete="name"  onchange="funSearchSuppliers()"><option value=""></option>';
                             foreach ($getStockItems['Data'] as $item) {
                                 $html.='<option value="'.$item['StockItemId'].'">'.$item['ItemNumber'].'-'.$item['ItemTitle'].'</option>';
                             }
@@ -165,13 +196,22 @@ class ItemController extends Controller
                     ], $this->client);
 
             $itemData = $linnworks->Inventory()->GetInventoryItemById($StockItemId);
-            $item = new item();
-            $item->item_id = $StockItemId;
-            $item->sku = $itemData['ItemNumber'];
-            $item->title = $itemData['ItemTitle'];
-            $tasks->save();
 
-            $item->users()->attach($request->user_id);
+            $item = item::where('item_id',$StockItemId)->with(['users'])->first();
+        
+            if(isset($item)){
+                if(count($item->users)==0 || !in_array($request->user_id, $item->users->pluck('id')->toArray())){
+                    $item->users()->attach($request->user_id);
+                }
+            }else{
+                $item = new item();
+                $item->item_id = $StockItemId;
+                $item->sku = $itemData['ItemNumber'];
+                $item->title = $itemData['ItemTitle'];
+                $item->save();
+
+                $item->users()->attach($request->user_id);
+            }
 
             //Session::flash('success', 'Item was created successfully.');
             //return redirect()->route('item.index');

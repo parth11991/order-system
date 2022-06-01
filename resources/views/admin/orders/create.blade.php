@@ -36,14 +36,17 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Supplier &nbsp;</label>
-                            <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id">
-                                @foreach ($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                @endforeach
-                            </select>
+                        <div id="user_list">
+                            <div class="form-group">
+                                <label>Supplier &nbsp;</label>
+                                <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id">
+                                    @foreach ($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div> 
                         </div>
+                        
 
                         <div class="form-group">
                             <label>Company &nbsp;</label>
@@ -172,6 +175,33 @@
     $("#new_price_currency").select2({
       placeholder: "Select Currency",
       allowClear: false
+    });
+
+    function funSearchSuppliers() {
+        $("#pageloader").fadeIn();
+        $.ajax({
+          url : '{{ route('admin.order.ajax.search_suppliers') }}',
+          data: {
+            "_token": "{{ csrf_token() }}",
+            "keyword": $('#item').val()
+            },
+          type: 'get',
+          dataType: 'html',
+          success: function( result )
+          {
+            $("#user_list").html(result);
+            $("#supplier_id").select2({
+              placeholder: "Select Supplier",
+              allowClear: true
+            });
+            $("#pageloader").hide();
+          }
+        });
+    }
+
+    $("#user_id").select2({
+      placeholder: "Select Supplier",
+      allowClear: true
     });
 
 </script>
