@@ -39,7 +39,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <div class="table-responsive list-table-wrapper">
+                    <div class="table-responsive list-table-wrapper" style="padding-top: 20px;">
                         <!-- <button onclick="exportTableToExcel('table')">Export Table Data To Excel File</button> -->
                         <table class="table table-hover dataTable no-footer" id="table" width="100%">
                             <thead>
@@ -122,13 +122,20 @@ function datatables() {
     }
     
     var table = $('#table').DataTable({
-        dom: 'RBfrtip',
+        /*dom: 'RBfrtip',*/
+        dom: 'RlBfrtip',
+        "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
         buttons: [{
                         extend: 'pdf',
                         title: 'Order Data Export',
                         exportOptions: {
-                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ]
+                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ],
+                            modifier: {
+                                search: 'applied',
+                                order: 'applied'
+                            }
                         },
+
                         customize: function(doc) {
                            //find paths of all images, already in base64 format
                            var arr2 = $('.img-fluid').map(function(){
@@ -139,7 +146,7 @@ function datatables() {
                             console.log(doc);
                                            doc.content[1].table.body[c][0] = {
                                              image: arr2[i],
-                                             width: 100
+                                             width: 70
                                            }
                                              }
                          },
@@ -147,21 +154,21 @@ function datatables() {
                         extend: 'excel',
                         title: 'Order Data Export',
                         exportOptions: {
-                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ]
+                            columns: [ 1, 2, 3,4,5,6,7,10 ]
                         },
                         
                     }, {
                         extend: 'csv',
                         title: 'Order Data Export',
                         exportOptions: {
-                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ]
+                            columns: [ 1, 2, 3,4,5,6,7,10 ]
                         }
                     }
                 ],
         select: true,
         
         aaSorting     : [[0, 'asc']],
-        iDisplayLength: 25,
+        iDisplayLength: 10,
         stateSave     : true,
         responsive    : true,
         fixedHeader   : true,

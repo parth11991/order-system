@@ -167,9 +167,18 @@ class OrdersController extends Controller
                 ->addColumn('item_img', function ($data) {
                     $path = $data->image;
                     $type = pathinfo($path, PATHINFO_EXTENSION);
-                    $imagedata = file_get_contents($path);
-                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
-                    return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                    $imagedata = @file_get_contents($path);
+                    if (strpos($http_response_header[0], "200")) { 
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                        return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                    } else { 
+                        $path = asset('public/image/no_image.jpg');
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $imagedata = file_get_contents($path);
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                        return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                    } 
+                    
                 })
 
                 ->rawColumns(['item_img','company_name','order_date','order_status','action','status_field'])
@@ -245,8 +254,22 @@ class OrdersController extends Controller
                         return Carbon::parse($data->created_at);
                     })
 
+                    
                     ->addColumn('item_img', function ($data) {
-                        return '<img src="'.$data->image.'" alt="Item Image" class="profile-user-img-small" style="width: 70px;height: 60px;">';
+                        $path = $data->image;
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $imagedata = @file_get_contents($path);
+                        if (strpos($http_response_header[0], "200")) { 
+                            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                            return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                        } else { 
+                            $path = asset('public/image/no_image.jpg');
+                            $type = pathinfo($path, PATHINFO_EXTENSION);
+                            $imagedata = file_get_contents($path);
+                            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                            return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                        } 
+                        
                     })
 
                     ->rawColumns(['item_img','order_date','order_status','action'])
@@ -310,11 +333,13 @@ class OrdersController extends Controller
         
         if(isset($items->users)){
             $user_arr = $items->users->pluck('id')->toArray();
+            $suppliers = User::role('supplier')->orderByRaw("field(id,".implode(',',$user_arr).") desc")->get();
         }else{
             $user_arr = array();
+            $suppliers = User::role('supplier')->get();
         }
         
-        $suppliers = User::role('supplier')->orderByRaw("field(id,".implode(',',$user_arr).") desc")->get(); 
+         
 
         $html='<div class="form-group">
                     <label>Supplier &nbsp;</label>
@@ -326,6 +351,79 @@ class OrdersController extends Controller
                 </div>';
 
         return $html;
+    }  
+
+
+    /**
+     * Datatables Ajax Data
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function latest_order(Request $request)
+    {
+        if ($request->ajax() == true) {
+
+            $user_id = auth()->user()->id;
+            $model = orders::where('item_id',$request->keyword)->with(['supplier','company']);
+
+            return Datatables::eloquent($model)
+                    
+                    ->addColumn('order_status', function ($data) {
+                        if($data->status=='0'){ 
+                            $class ='text-danger';    
+                            $status= 'new order';
+                        }elseif ($data->status=='1') {
+                            $class= 'text-warning';
+                            $status= 'confirmed';
+                        }elseif ($data->status=='2') {
+                            $class= 'text-info';
+                            $status= 'shipped';
+                        }else{
+                            $class ='text-success';
+                            $status= 'received';
+                        }
+
+                        return '<div class="dropdown action-label">
+                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o '.$class.'"></i> '.$status.' </a>
+                            </div>';
+                    })
+
+                    ->addColumn('order_date', function ($data) {
+                        return Carbon::parse($data->created_at);
+                    })
+
+                    ->addColumn('company_name', function ($data) {
+                        if(isset($data->company->name)){
+                            return $data->company->name;
+                        }
+                    })
+                    ->addColumn('item_img', function ($data) {
+                        $path = $data->image;
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $imagedata = @file_get_contents($path);
+                        if (strpos($http_response_header[0], "200")) { 
+                            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                            return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                        } else { 
+                            $path = asset('public/image/no_image.jpg');
+                            $type = pathinfo($path, PATHINFO_EXTENSION);
+                            $imagedata = file_get_contents($path);
+                            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                            return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                        } 
+                        
+                    })
+
+                    ->addColumn('supplier', function ($data) {
+                        
+                        return '<img src="'.$data->supplier->getImageUrlAttribute($data->supplier->id).'" alt="user_id_'.$data->supplier->id.'" class="profile-user-img-small img-circle"> '. $data->supplier->name;
+                    })
+
+                    ->rawColumns(['item_img','order_date','order_status','company_name','supplier'])
+
+                    ->make(true);
+        }
     }   
 
     /**

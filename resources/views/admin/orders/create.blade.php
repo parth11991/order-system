@@ -46,6 +46,26 @@
                                 </select>
                             </div> 
                         </div>
+
+                        <div class="table-responsive list-table-wrapper" id="latest_order" style="display:none;">
+                            <table class="table table-hover dataTable no-footer" id="table_latest_order" width="100%">
+                                <thead>
+                                <tr> 
+                                    <th>Item Image</th> 
+                                    <th>supplier</th> 
+                                    <th>Company</th> 
+                                    <th>SKU</th>
+                                    <th>Item Title</th>
+                                    <th>Price</th>
+                                    <th>QTY</th>
+                                    <th>Due Date</th>
+                                    <th>Order Date</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                         
 
                         <div class="form-group">
@@ -137,6 +157,7 @@
 
     function funSearchItems() {
         $("#pageloader").fadeIn();
+        $("#latest_order").hide();
         $.ajax({
           url : '{{ route('admin.order.ajax.search_items') }}',
           data: {
@@ -195,7 +216,46 @@
               allowClear: true
             });
             $("#pageloader").hide();
+            $("#latest_order").fadeIn();
           }
+        });
+
+
+        var url = "{{ url('admin/order/ajax/latest_order') }}";
+        var columns = [
+                            {data: 'item_img', name: 'item_img'},
+                            {data: 'supplier', name: 'supplier'},
+                            {data: 'company_name', name: 'company_name'},
+                            {data: 'sku', name: 'sku'},
+                            {data: 'item_title', name: 'item_title'},
+                            {data: 'price', name: 'price'},
+                            {data: 'qty', name: 'qty'},
+                            {data: 'due_date', name: 'due_date'},
+                            {data: 'order_date', name: 'order_date'},
+                            {data: 'order_status', name: 'order_status'},
+                        ];
+        
+        var table = $('#table_latest_order').DataTable({
+            dom: 'RBfrtip',
+            buttons: [],
+            select: true,
+            iDisplayLength: 5,
+            stateSave     : true,
+            responsive    : true,
+            fixedHeader   : true,
+            processing    : false,
+            serverSide    : true,
+            "bDestroy"    : true,
+            pagingType    : "full_numbers",
+            ajax          : {
+                url     : url,
+                dataType: 'json',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "keyword": $('#item').val()
+                }
+            },
+            columns       : columns,
         });
     }
 
