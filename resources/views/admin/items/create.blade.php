@@ -39,9 +39,86 @@
                         <div id="user_list">
                             <div class="form-group">
                                 <label>Supplier &nbsp;</label>
-                                <select class="form-control select2" id="user_id" name="user_id[]" required autocomplete="user_id" multiple>
+                                <select class="form-control select2" id="user_id" name="user_id" required autocomplete="user_id">
                                     <option value=""></option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Weight</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_weight" name="product_weight" class="form-control" placeholder="Product Weight">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Width</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_width" name="product_width" class="form-control" placeholder="Product Width">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Length</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_length" name="product_length" class="form-control" placeholder="Product Length">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Depth</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_depth" name="product_depth" class="form-control" placeholder="Product Depth">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Inner Quantity</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_inner_quantity" name="box_inner_quantity" class="form-control" placeholder="Box Inner Quantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Outer Qquantity</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_outer_quantity" name="box_outer_quantity" class="form-control" placeholder="Box Outer Qquantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Weight Net Kg</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_weight_net_kg" name="box_weight_net_kg" class="form-control" placeholder="Box Weight Net Kg">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Weight Gross Kg</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_weight_gross_kg" name="box_weight_gross_kg" class="form-control" placeholder="Box Weight Gross Kg">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Width Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_width_cm" name="box_width_cm" class="form-control" placeholder="Box Width Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Length Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_length_cm" name="box_length_cm" class="form-control" placeholder="Box Length Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Depth Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
                             </div>
                         </div>
                         

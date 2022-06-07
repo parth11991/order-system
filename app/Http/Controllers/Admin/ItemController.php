@@ -136,7 +136,7 @@ class ItemController extends Controller
 
         $html='<div class="form-group">
                     <label>Supplier &nbsp;</label>
-                    <select class="form-control select2" id="user_id" name="user_id[]" required autocomplete="user_id" multiple><option value=""></option>';
+                    <select class="form-control select2" id="user_id" name="user_id" required autocomplete="user_id"><option value=""></option>';
                             foreach ($suppliers as $supplier) {
                                 if(!in_array($supplier->id, $user_arr)){
                                     $html.='<option value="'.$supplier->id.'">'.$supplier->name.'</option>';
@@ -201,7 +201,19 @@ class ItemController extends Controller
         
             if(isset($item)){
                 if(count($item->users)==0 || !in_array($request->user_id, $item->users->pluck('id')->toArray())){
-                    $item->users()->attach($request->user_id);
+                    $item->users()->attach($request->user_id,
+                                            ['product_weight' => $request->product_weight,
+                                             'product_width' => $request->product_width,
+                                             'product_length' => $request->product_length,
+                                             'product_depth' => $request->product_depth,
+                                             'box_inner_quantity' => $request->box_inner_quantity,
+                                             'box_outer_quantity' => $request->box_outer_quantity,
+                                             'box_weight_net_kg' => $request->box_weight_net_kg,
+                                             'box_weight_gross_kg' => $request->box_weight_gross_kg,
+                                             'box_width_cm' => $request->box_width_cm,
+                                             'box_length_cm' => $request->box_length_cm,
+                                             'box_depth_cm' => $request->box_depth_cm,
+                                            ]);
                 }
             }else{
                 $item = new item();
@@ -210,7 +222,19 @@ class ItemController extends Controller
                 $item->title = $itemData['ItemTitle'];
                 $item->save();
 
-                $item->users()->attach($request->user_id);
+                $item->users()->attach($request->user_id,
+                                            ['product_weight' => $request->product_weight,
+                                             'product_width' => $request->product_width,
+                                             'product_length' => $request->product_length,
+                                             'product_depth' => $request->product_depth,
+                                             'box_inner_quantity' => $request->box_inner_quantity,
+                                             'box_outer_quantity' => $request->box_outer_quantity,
+                                             'box_weight_net_kg' => $request->box_weight_net_kg,
+                                             'box_weight_gross_kg' => $request->box_weight_gross_kg,
+                                             'box_width_cm' => $request->box_width_cm,
+                                             'box_length_cm' => $request->box_length_cm,
+                                             'box_depth_cm' => $request->box_depth_cm,
+                                            ]);
             }
 
             //Session::flash('success', 'Item was created successfully.');
