@@ -39,7 +39,7 @@
                         <div id="user_list">
                             <div class="form-group">
                                 <label>Supplier &nbsp;</label>
-                                <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id">
+                                <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id" onchange="funGetSupplierItemDimensions(this.value)">
                                     @foreach ($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                     @endforeach
@@ -135,6 +135,83 @@
                             <input type="number" name="qty" class="form-control" required autocomplete="qty" autofocus>
                         </div>
                         
+                        <div class="form-group">
+                            <label>Product Weight</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_weight" name="product_weight" class="form-control" placeholder="Product Weight">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Width</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_width" name="product_width" class="form-control" placeholder="Product Width">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Length</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_length" name="product_length" class="form-control" placeholder="Product Length">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Depth</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="product_depth" name="product_depth" class="form-control" placeholder="Product Depth">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Inner Quantity</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_inner_quantity" name="box_inner_quantity" class="form-control" placeholder="Box Inner Quantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Outer Quantity</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_outer_quantity" name="box_outer_quantity" class="form-control" placeholder="Box Outer Quantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Weight Net Kg</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_weight_net_kg" name="box_weight_net_kg" class="form-control" placeholder="Box Weight Net Kg">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Weight Gross Kg</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_weight_gross_kg" name="box_weight_gross_kg" class="form-control" placeholder="Box Weight Gross Kg">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Width Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_width_cm" name="box_width_cm" class="form-control" placeholder="Box Width Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Length Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_length_cm" name="box_length_cm" class="form-control" placeholder="Box Length Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Depth Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Create</button>
                         <a href="" class="btn btn-secondary"  data-dismiss="modal">Close</a>
                     </form>
@@ -256,6 +333,47 @@
                 }
             },
             columns       : columns,
+        });
+    }
+
+    function funGetSupplierItemDimensions(user_id) {
+        $.ajax({
+          url : '{{ route('admin.order.ajax.get_supplier_item_dimensions') }}',
+          data: {
+            "_token": "{{ csrf_token() }}",
+            "item": $('#item').val(),
+            "user_id": user_id
+            },
+          type: 'get',
+          dataType: 'json',
+          success: function( result )
+          {
+            if (typeof result.id !== 'undefined') {
+                $("#product_weight").val(result.product_weight);
+                $("#product_width").val(result.product_width);
+                $("#product_length").val(result.product_length);
+                $("#product_depth").val(result.product_depth);
+                $("#box_inner_quantity").val(result.box_inner_quantity);
+                $("#box_outer_quantity").val(result.box_outer_quantity);
+                $("#box_weight_net_kg").val(result.box_weight_net_kg);
+                $("#box_weight_gross_kg").val(result.box_weight_gross_kg);
+                $("#box_width_cm").val(result.box_width_cm);
+                $("#box_length_cm").val(result.box_length_cm);
+                $("#box_depth_cm").val(result.box_depth_cm);
+            }else{
+                $("#product_weight").val('');
+                $("#product_width").val('');
+                $("#product_length").val('');
+                $("#product_depth").val('');
+                $("#box_inner_quantity").val('');
+                $("#box_outer_quantity").val('');
+                $("#box_weight_net_kg").val('');
+                $("#box_weight_gross_kg").val('');
+                $("#box_width_cm").val('');
+                $("#box_length_cm").val('');
+                $("#box_depth_cm").val('');
+            }
+          }
         });
     }
 

@@ -40,7 +40,7 @@
 
                             <div class="form-group" style="display:none;">
                                 <label>Suppliers &nbsp;</label>
-                                <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id">
+                                <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id" onchange="funGetSupplierItemDimensions(this.value)">
                                     @foreach ($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}" @if($supplier->id==$order->supplier_id) selected @endif>{{ $supplier->name }}</option>
                                     @endforeach
@@ -171,6 +171,28 @@
         });
     }
 
+    function funSearchSuppliers() {
+        $("#pageloader").fadeIn();
+        $.ajax({
+          url : '{{ route('admin.order.ajax.search_suppliers') }}',
+          data: {
+            "_token": "{{ csrf_token() }}",
+            "keyword": $('#item').val()
+            },
+          type: 'get',
+          dataType: 'html',
+          success: function( result )
+          {
+            $("#user_list").html(result);
+            $("#supplier_id").select2({
+              placeholder: "Select Supplier",
+              allowClear: true
+            });
+            $("#pageloader").hide();
+            $("#latest_order").fadeIn();
+          }
+    });
+
     $("#supplier_id").select2({
       placeholder: "Select Supplier",
       allowClear: true
@@ -204,5 +226,48 @@
     }
     selected_status();
     @endif
+
+    funGetSupplierItemDimensions({{ $order->supplier_id }});
+
+    function funGetSupplierItemDimensions(user_id) {
+        $.ajax({
+          url : '{{ route('admin.order.ajax.get_supplier_item_dimensions') }}',
+          data: {
+            "_token": "{{ csrf_token() }}",
+            "item": $('#item').val(),
+            "user_id": user_id
+            },
+          type: 'get',
+          dataType: 'json',
+          success: function( result )
+          {
+            if (typeof result.id !== 'undefined') {
+                $("#product_weight").val(result.product_weight);
+                $("#product_width").val(result.product_width);
+                $("#product_length").val(result.product_length);
+                $("#product_depth").val(result.product_depth);
+                $("#box_inner_quantity").val(result.box_inner_quantity);
+                $("#box_outer_quantity").val(result.box_outer_quantity);
+                $("#box_weight_net_kg").val(result.box_weight_net_kg);
+                $("#box_weight_gross_kg").val(result.box_weight_gross_kg);
+                $("#box_width_cm").val(result.box_width_cm);
+                $("#box_length_cm").val(result.box_length_cm);
+                $("#box_depth_cm").val(result.box_depth_cm);
+            }else{
+                $("#product_weight").val('');
+                $("#product_width").val('');
+                $("#product_length").val('');
+                $("#product_depth").val('');
+                $("#box_inner_quantity").val('');
+                $("#box_outer_quantity").val('');
+                $("#box_weight_net_kg").val('');
+                $("#box_weight_gross_kg").val('');
+                $("#box_width_cm").val('');
+                $("#box_length_cm").val('');
+                $("#box_depth_cm").val('');
+            }
+          }
+        });
+    }
 </script>
 @endsection

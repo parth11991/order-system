@@ -86,6 +86,7 @@ Route::group([
     Route::get('order/ajax/search_items', 'OrdersController@search_items')->name('order.ajax.search_items'); // For search items
     Route::get('order/ajax/search_suppliers', 'OrdersController@search_suppliers')->name('order.ajax.search_suppliers');
     Route::get('order/ajax/latest_order', 'OrdersController@latest_order')->name('order.ajax.latest_order');
+    Route::get('order/ajax/get_supplier_item_dimensions', 'OrdersController@get_supplier_item_dimensions')->name('order.ajax.get_supplier_item_dimensions');
 
 
     // Company Routes

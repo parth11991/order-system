@@ -6,6 +6,7 @@ use App\orders;
 use App\Company;
 use App\User;
 use App\item;
+use App\Supplier_has_item;
 
 use App\Http\Controllers\Controller;
 use App\Traits\UploadTrait;
@@ -343,7 +344,7 @@ class OrdersController extends Controller
 
         $html='<div class="form-group">
                     <label>Supplier &nbsp;</label>
-                    <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id"><option value=""></option>';
+                    <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id" onchange="funGetSupplierItemDimensions(this.value)"><option value=""></option>';
                             foreach ($suppliers as $supplier) {
                                 $html.='<option value="'.$supplier->id.'">'.$supplier->name.'</option>';
                             }
@@ -351,6 +352,20 @@ class OrdersController extends Controller
                 </div>';
 
         return $html;
+    } 
+
+    /**
+     * Datatables Ajax Data
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function get_supplier_item_dimensions(Request $request)
+    {
+        $item = item::where('item_id',$request->item)->first();
+        $user_id = $request->user_id;
+        $supplier_item_dimensions = Supplier_has_item::where('item_id',$item->id)->where('user_id',$user_id)->first();
+        return response()->json($supplier_item_dimensions);
     }  
 
 
@@ -487,10 +502,23 @@ class OrdersController extends Controller
 
             $item = item::where('item_id',$StockItemId)->with(['users'])->first();
         
+            $supplier_item_dimensions = ['product_weight' => $request->product_weight,
+                                         'product_width' => $request->product_width,
+                                         'product_length' => $request->product_length,
+                                         'product_depth' => $request->product_depth,
+                                         'box_inner_quantity' => $request->box_inner_quantity,
+                                         'box_outer_quantity' => $request->box_outer_quantity,
+                                         'box_weight_net_kg' => $request->box_weight_net_kg,
+                                         'box_weight_gross_kg' => $request->box_weight_gross_kg,
+                                         'box_width_cm' => $request->box_width_cm,
+                                         'box_length_cm' => $request->box_length_cm,
+                                         'box_depth_cm' => $request->box_depth_cm,
+                                        ];
+
+
             if(isset($item)){
-                if(count($item->users)==0 || !in_array($request->supplier_id, $item->users->pluck('id')->toArray())){
-                    $item->users()->attach($request->supplier_id);
-                }
+                Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->delete();
+                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
             }else{
                 $item = new item();
                 $item->item_id = $StockItemId;
@@ -498,7 +526,7 @@ class OrdersController extends Controller
                 $item->title = $itemData['ItemTitle'];
                 $item->save();
 
-                $item->users()->attach($request->supplier_id);
+                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
             }
             
 
@@ -625,15 +653,32 @@ class OrdersController extends Controller
             $order->updated_by = auth()->user()->id;
             $order->save();
 
-            $item = item::where('item_id',$StockItemId)->whereRelation('users', 'users.id', $request->supplier_id)->get();
-            if(count($item)==0){
+            $item = item::where('item_id',$StockItemId)->whereRelation('users', 'users.id', $request->supplier_id)->first();
+
+            $supplier_item_dimensions = ['product_weight' => $request->product_weight,
+                                         'product_width' => $request->product_width,
+                                         'product_length' => $request->product_length,
+                                         'product_depth' => $request->product_depth,
+                                         'box_inner_quantity' => $request->box_inner_quantity,
+                                         'box_outer_quantity' => $request->box_outer_quantity,
+                                         'box_weight_net_kg' => $request->box_weight_net_kg,
+                                         'box_weight_gross_kg' => $request->box_weight_gross_kg,
+                                         'box_width_cm' => $request->box_width_cm,
+                                         'box_length_cm' => $request->box_length_cm,
+                                         'box_depth_cm' => $request->box_depth_cm,
+                                        ];
+
+            if(!isset($item->id)){
                 $item = new item();
                 $item->item_id = $StockItemId;
                 $item->sku = $itemData['ItemNumber'];
                 $item->title = $itemData['ItemTitle'];
                 $item->save();
 
-                $item->users()->attach($request->supplier_id);
+                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+            }else{
+                Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->delete();
+                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
             }
             //Session::flash('success', 'A branch updated successfully.');
             //return redirect('admin/branch');

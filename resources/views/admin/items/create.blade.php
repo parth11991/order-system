@@ -186,6 +186,8 @@
         });
     }
 
+    
+
     $("#user_id").select2({
       placeholder: "Select Supplier",
       allowClear: true
