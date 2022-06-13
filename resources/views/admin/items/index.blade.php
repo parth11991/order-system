@@ -47,11 +47,7 @@
                                 <th>SKU</th>
                                 <th>Item Title</th>
                                 <th>Supplier</th>
-                                <!-- @if(!auth()->user()->hasRole('supplier'))
                                 <th class="noExport" style="width: 100px;">Action</th>
-                                @else
-                                <th class="noExport" style="width: 100px;">Action</th>
-                                @endif -->
                             </tr>
                             </thead>
                             <tbody></tbody>
@@ -75,12 +71,12 @@ function datatables() {
                         {data: 'sku', name: 'sku'},
                         {data: 'title', name: 'title'},
                         {data: 'users_avatars', name: 'users_avatars'},
-                        /*{data: 'action', name: 'action', orderable: false, searchable: false,
+                        {data: 'action', name: 'action', orderable: false, searchable: false,
                             fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                                 //  console.log( nTd );
                                 $("a", nTd).tooltip({container: 'body'});
                             }
-                        },*/
+                        },
                         
                     ];
     

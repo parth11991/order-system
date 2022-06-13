@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\item;
 use App\User;
+use App\Supplier_has_item;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreitemRequest;
@@ -93,7 +94,7 @@ class ItemController extends Controller
                     
                     $html='';
                     //if (auth()->user()->can('edit Item')){
-                        $html.= '<a href="'.  route('admin.item.edit', ['item' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-1"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
+                        $html.= '<a href="'.  route('admin.item.edit', ['item' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-1"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
                     //}
 
                     return $html; 
@@ -276,8 +277,27 @@ class ItemController extends Controller
      */
     public function edit(item $item)
     {
-        $suppliers = User::role('supplier')->get(); 
-        return view('admin.orders.edit', compact("item",'suppliers'));
+        $linnworks = Linnworks_API::make([
+                        'applicationId' => env('LINNWORKS_APP_ID'),
+                        'applicationSecret' => env('LINNWORKS_SECRET'),
+                        'token' => env('LINNWORKS_TOKEN'),
+                    ], $this->client);
+
+        $itemData = $linnworks->Inventory()->GetInventoryItemById($item->item_id);
+        $itemImage = $linnworks->Inventory()->GetInventoryItemImages($item->item_id);
+        return view('admin.items.edit', compact("item","itemData","itemImage"));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_supplier(item $item,User $user)
+    {
+        $supplier_item_dimensions = Supplier_has_item::where('item_id',$item->id)->where('user_id',$user->id)->first();  
+        return view('admin.items.edit_supplier', compact("item","user","supplier_item_dimensions"));
     }
 
     /**
@@ -287,37 +307,30 @@ class ItemController extends Controller
      * @param  \App\item  $item
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateitemRequest $request, item $item)
+    public function update(Request $request, Supplier_has_item $Supplier_has_item)
     {
         try {
 
-            if (empty($item)) {
+            if (empty($Supplier_has_item)) {
                 //Session::flash('failed', 'item Update Denied');
                 //return redirect()->back();
                 return response()->json([
                     'error' => 'item update denied.' // for status 200
                 ]);   
             }
-
-            $StockItemId = $request->item;
-            
-            $linnworks = Linnworks_API::make([
-                        'applicationId' => env('LINNWORKS_APP_ID'),
-                        'applicationSecret' => env('LINNWORKS_SECRET'),
-                        'token' => env('LINNWORKS_TOKEN'),
-                    ], $this->client);
-            $itemData = $linnworks->Inventory()->GetInventoryItemById($StockItemId);
-
-            $item->item_id = $StockItemId;
-            $item->sku = $itemData['ItemNumber'];
-            $item->item_title = $itemData['ItemTitle'];
-            $item->save();
-            $item->users()->detach();
-
-            $item->users()->syncWithoutDetaching($request->user_id);
-
-            //Session::flash('success', 'A item updated successfully.');
-            //return redirect('admin/item');
+                
+            $Supplier_has_item->product_weight = $request->product_weight;
+            $Supplier_has_item->product_width = $request->product_width;
+            $Supplier_has_item->product_length = $request->product_length;
+            $Supplier_has_item->product_depth = $request->product_depth;
+            $Supplier_has_item->box_inner_quantity = $request->box_inner_quantity;
+            $Supplier_has_item->box_outer_quantity = $request->box_outer_quantity;
+            $Supplier_has_item->box_weight_net_kg = $request->box_weight_net_kg;
+            $Supplier_has_item->box_weight_gross_kg = $request->box_weight_gross_kg;
+            $Supplier_has_item->box_width_cm = $request->box_width_cm;
+            $Supplier_has_item->box_length_cm = $request->box_length_cm;
+            $Supplier_has_item->box_depth_cm = $request->box_depth_cm;
+            $Supplier_has_item->save();
 
             return response()->json([
                 'success' => 'item update successfully.' // for status 200

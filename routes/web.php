@@ -98,7 +98,10 @@ Route::group([
     Route::get('item/ajax/data', 'ItemController@datatables'); // For Datatables
     Route::get('item/ajax/search_items', 'ItemController@search_items')->name('item.ajax.search_items'); 
     Route::get('item/ajax/search_suppliers', 'ItemController@search_suppliers')->name('item.ajax.search_suppliers'); 
+    Route::get('item/{item}/edit_supplier/{user}', ['as' => 'edit_item_supplier', 'uses' => 'ItemController@edit_supplier']);
+    Route::post('item/{Supplier_has_item}/update', 'ItemController@update')->name('item.update');
 
+    
     
 });
 
