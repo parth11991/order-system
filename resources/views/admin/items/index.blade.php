@@ -44,6 +44,7 @@
                         <table class="table table-hover dataTable no-footer" id="table" width="100%">
                             <thead>
                             <tr> 
+                                <th>Image</th>
                                 <th>SKU</th>
                                 <th>Item Title</th>
                                 <th>Supplier</th>
@@ -68,6 +69,7 @@ function datatables() {
     var checkRole = "{{auth()->user()->hasRole('supplier')}}";
     var url = "{{ url('admin/item/ajax/data') }}";
     var columns = [
+                        {data: 'item_img', name: 'item_img'},
                         {data: 'sku', name: 'sku'},
                         {data: 'title', name: 'title'},
                         {data: 'users_avatars', name: 'users_avatars'},

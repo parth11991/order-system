@@ -17,6 +17,7 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->string('item_id');
             $table->string('sku');
+            $table->string('image');
             
             $table->string('title');
             $table->timestamps();

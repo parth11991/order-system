@@ -522,6 +522,11 @@ class OrdersController extends Controller
             }else{
                 $item = new item();
                 $item->item_id = $StockItemId;
+                if(isset($itemImage[0]['FullSource'])){
+                  $item->image = $itemImage[0]['FullSource'];  
+                }else{
+                  $item->image = asset("/public/image/no_image.jpg"); 
+                }
                 $item->sku = $itemData['ItemNumber'];
                 $item->title = $itemData['ItemTitle'];
                 $item->save();
@@ -653,8 +658,8 @@ class OrdersController extends Controller
             $order->updated_by = auth()->user()->id;
             $order->save();
 
-            $item = item::where('item_id',$StockItemId)->whereRelation('users', 'users.id', $request->supplier_id)->first();
-
+            $item = item::where('item_id',$StockItemId)->with(['users'])->first();
+        
             $supplier_item_dimensions = ['product_weight' => $request->product_weight,
                                          'product_width' => $request->product_width,
                                          'product_length' => $request->product_length,
@@ -668,16 +673,22 @@ class OrdersController extends Controller
                                          'box_depth_cm' => $request->box_depth_cm,
                                         ];
 
-            if(!isset($item->id)){
+
+            if(isset($item)){
+                Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->delete();
+                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+            }else{
                 $item = new item();
                 $item->item_id = $StockItemId;
                 $item->sku = $itemData['ItemNumber'];
                 $item->title = $itemData['ItemTitle'];
+                if(isset($itemImage[0]['FullSource'])){
+                  $item->image = $itemImage[0]['FullSource'];  
+                }else{
+                  $item->image = asset("/public/image/no_image.jpg"); 
+                }
                 $item->save();
 
-                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
-            }else{
-                Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->delete();
                 $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
             }
             //Session::flash('success', 'A branch updated successfully.');

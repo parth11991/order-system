@@ -15,7 +15,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{ route('admin.item.update', ['Supplier_has_item' => $supplier_item_dimensions->id]) }}" method="post" id="popup-form" class="mt-4">
+                    <form action="{{ route('admin.item.update', ['Supplier_has_item' => $supplier_item_dimensions->id]) }}" method="post" id="popup-form-edit-supplier" class="mt-4">
                         @csrf
                         <div id="item_list">
                             <div class="form-group">
@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <label>Product Width</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="{{$supplier_item_dimensions->product_weight}}" required id="product_width" name="product_width" class="form-control" placeholder="Product Width">
+                                <input type="number" min="0.00" value="{{$supplier_item_dimensions->product_width}}" required id="product_width" name="product_width" class="form-control" placeholder="Product Width">
                             </div>
                         </div>
 
@@ -134,6 +134,31 @@
     $("#user_id").select2({
       placeholder: "Select Supplier",
       allowClear: true
+    });
+
+    $(document).ready(function () {
+        $(document).on('submit','#popup-form-edit-supplier',function(e){
+            e.preventDefault();
+            var url = $(this).attr('action');
+            $("#pageloader").fadeIn();
+            $.ajax({
+                method: "POST",
+                url: url,
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: $(this).serialize(),
+                success: function(message){
+                    $("#popup-modal").modal('hide');
+                    alert_message(message);
+                    setTimeout(function() {   //calls click event after a certain time
+                        $("#pageloader").hide();
+                    }, 1000);
+                },
+                error: function (data){
+                        console.log(data);
+                        $("#pageloader").hide();
+                }
+            });
+        }); 
     });
 
 </script>

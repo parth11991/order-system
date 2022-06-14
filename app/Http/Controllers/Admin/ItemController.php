@@ -6,6 +6,8 @@ use App\item;
 use App\User;
 use App\Supplier_has_item;
 
+use App\orders;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreitemRequest;
 use App\Http\Requests\UpdateitemRequest;
@@ -100,7 +102,25 @@ class ItemController extends Controller
                     return $html; 
                 
                 })
-                ->rawColumns(['users_avatars', 'action'])
+
+                ->addColumn('item_img', function ($data) {
+                    $path = $data->image;
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                    $imagedata = @file_get_contents($path);
+                    if (strpos($http_response_header[0], "200")) { 
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                        return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                    } else { 
+                        $path = asset('public/image/no_image.jpg');
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $imagedata = file_get_contents($path);
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+                        return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
+                    } 
+                    
+                })
+
+                ->rawColumns(['users_avatars', 'action', 'item_img'])
                 ->make(true);
         }
     }
@@ -197,7 +217,7 @@ class ItemController extends Controller
                     ], $this->client);
 
             $itemData = $linnworks->Inventory()->GetInventoryItemById($StockItemId);
-
+            $itemImage = $linnworks->Inventory()->GetInventoryItemImages($StockItemId);
             $item = item::where('item_id',$StockItemId)->with(['users'])->first();
         
             if(isset($item)){
@@ -221,6 +241,11 @@ class ItemController extends Controller
                 $item->item_id = $StockItemId;
                 $item->sku = $itemData['ItemNumber'];
                 $item->title = $itemData['ItemTitle'];
+                if(isset($itemImage[0]['FullSource'])){
+                  $item->image = $itemImage[0]['FullSource'];  
+                }else{
+                  $item->image = asset("/public/image/no_image.jpg"); 
+                }
                 $item->save();
 
                 $item->users()->attach($request->user_id,
@@ -277,12 +302,12 @@ class ItemController extends Controller
      */
     public function edit(item $item)
     {
+
         $linnworks = Linnworks_API::make([
                         'applicationId' => env('LINNWORKS_APP_ID'),
                         'applicationSecret' => env('LINNWORKS_SECRET'),
                         'token' => env('LINNWORKS_TOKEN'),
                     ], $this->client);
-
         $itemData = $linnworks->Inventory()->GetInventoryItemById($item->item_id);
         $itemImage = $linnworks->Inventory()->GetInventoryItemImages($item->item_id);
         return view('admin.items.edit', compact("item","itemData","itemImage"));
