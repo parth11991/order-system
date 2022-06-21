@@ -17,7 +17,7 @@ class AddSupplierHasItemsTable extends Migration
             $table->string('supplier_code')->nullable();
             $table->string('supplier_barcode')->nullable();
             $table->time('lead_time')->nullable();
-            $table->decimal('supplier_price', 9, 2)->default(0)->nullable();
+            $table->integer('supplier_price')->default(0)->nullable();
             $table->string('supplier_currency')->default('GBP');
             $table->integer('min_order_quantity')->default(0)->nullable();
         });

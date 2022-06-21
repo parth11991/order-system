@@ -513,6 +513,12 @@ class OrdersController extends Controller
                                          'box_width_cm' => $request->box_width_cm,
                                          'box_length_cm' => $request->box_length_cm,
                                          'box_depth_cm' => $request->box_depth_cm,
+                                         'supplier_code' => $request->supplier_code,
+                                         'supplier_barcode' => $request->supplier_barcode,
+                                         'lead_time' => 0,
+                                         'supplier_price' => $request->price,
+                                         'supplier_currency' => $request->currency,
+                                         'min_order_quantity' => 0,
                                         ];
 
 
@@ -671,6 +677,12 @@ class OrdersController extends Controller
                                          'box_width_cm' => $request->box_width_cm,
                                          'box_length_cm' => $request->box_length_cm,
                                          'box_depth_cm' => $request->box_depth_cm,
+                                         'supplier_code' => $request->supplier_code,
+                                         'supplier_barcode' => $request->supplier_barcode,
+                                         'lead_time' => 0,
+                                         'supplier_price' => $request->price,
+                                         'supplier_currency' => $request->currency,
+                                         'min_order_quantity' => 0,
                                         ];
 
 

@@ -121,7 +121,59 @@
                                 <input type="number" min="0.00" value="" required id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label>Box Depth Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Supplier Code</label>
+                            <div class="input-group">
+                                <input type="text" value="" required id="supplier_code" name="supplier_code" class="form-control" placeholder="Supplier Code">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Supplier Barcode</label>
+                            <div class="input-group">
+                                <input type="text" value="" required id="supplier_barcode" name="supplier_barcode" class="form-control" placeholder="Supplier Barcode">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Lead Time (Days)</label>
+                            <div class="input-group">
+                                <input type="number" min="0" value="" required id="lead_time" name="lead_time" class="form-control" placeholder="Lead Time (Days)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Supplier Currency</label>
+                            <div class="input-group">
+                                <select class="form-control select2" id="supplier_currency" name="supplier_currency" required autocomplete="supplier_currency">
+                                        <option value="GBP" selected>GBP</option>
+                                        <option value="USD">USD</option>
+                                        <option value="EURO">EURO</option>
+                                        <option value="RMB">RMB</option>
+                                </select>
+                            </div>
+                        </div>
                         
+                        <div class="form-group">
+                            <label>Supplier Price</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" required id="supplier_price" name="supplier_price" class="form-control" placeholder="Supplier Price">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Min Order Quantity</label>
+                            <input type="number" name="min_order_quantity" class="form-control" required autocomplete="min_order_quantity" autofocus>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Create</button>
                         <a href="" class="btn btn-secondary"  data-dismiss="modal">Close</a>
                     </form>

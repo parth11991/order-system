@@ -132,13 +132,27 @@
 
                         <div class="form-group">
                             <label>Qty</label>
-                            <input type="number" name="qty" class="form-control" required autocomplete="qty" autofocus>
+                            <input type="number" name="qty" id="qty" class="form-control" required autocomplete="qty" autofocus>
                         </div>
-                        
+
+                        <div class="form-group">
+                            <label>Supplier Code</label>
+                            <div class="input-group">
+                                <input type="text" value="" id="supplier_code" name="supplier_code" class="form-control" placeholder="Supplier Code">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Supplier Barcode</label>
+                            <div class="input-group">
+                                <input type="text" value="" id="supplier_barcode" name="supplier_barcode" class="form-control" placeholder="Supplier Barcode">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label>Product Weight</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="product_weight" name="product_weight" class="form-control" placeholder="Product Weight">
+                                <input type="number" min="0.00" value="" id="product_weight" name="product_weight" class="form-control" placeholder="Product Weight">
                             </div>
                         </div>
 
@@ -152,63 +166,63 @@
                         <div class="form-group">
                             <label>Product Length</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="product_length" name="product_length" class="form-control" placeholder="Product Length">
+                                <input type="number" min="0.00" value="" id="product_length" name="product_length" class="form-control" placeholder="Product Length">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Product Depth</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="product_depth" name="product_depth" class="form-control" placeholder="Product Depth">
+                                <input type="number" min="0.00" value="" id="product_depth" name="product_depth" class="form-control" placeholder="Product Depth">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Box Inner Quantity</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="box_inner_quantity" name="box_inner_quantity" class="form-control" placeholder="Box Inner Quantity">
+                                <input type="number" min="0.00" value="" id="box_inner_quantity" name="box_inner_quantity" class="form-control" placeholder="Box Inner Quantity">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Box Outer Quantity</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="box_outer_quantity" name="box_outer_quantity" class="form-control" placeholder="Box Outer Quantity">
+                                <input type="number" min="0.00" value="" id="box_outer_quantity" name="box_outer_quantity" class="form-control" placeholder="Box Outer Quantity">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Box Weight Net Kg</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="box_weight_net_kg" name="box_weight_net_kg" class="form-control" placeholder="Box Weight Net Kg">
+                                <input type="number" min="0.00" value="" id="box_weight_net_kg" name="box_weight_net_kg" class="form-control" placeholder="Box Weight Net Kg">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Box Weight Gross Kg</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="box_weight_gross_kg" name="box_weight_gross_kg" class="form-control" placeholder="Box Weight Gross Kg">
+                                <input type="number" min="0.00" value="" id="box_weight_gross_kg" name="box_weight_gross_kg" class="form-control" placeholder="Box Weight Gross Kg">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Box Width Cm</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="box_width_cm" name="box_width_cm" class="form-control" placeholder="Box Width Cm">
+                                <input type="number" min="0.00" value="" id="box_width_cm" name="box_width_cm" class="form-control" placeholder="Box Width Cm">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Box Length Cm</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="box_length_cm" name="box_length_cm" class="form-control" placeholder="Box Length Cm">
+                                <input type="number" min="0.00" value="" id="box_length_cm" name="box_length_cm" class="form-control" placeholder="Box Length Cm">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Box Depth Cm</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
+                                <input type="number" min="0.00" value="" id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
                             </div>
                         </div>
 
@@ -260,7 +274,7 @@
       allowClear: true
     });
 
-    $("#currency").select2({
+    /*$("#currency").select2({
       placeholder: "Select Currency",
       allowClear: false
     });
@@ -273,7 +287,7 @@
     $("#new_price_currency").select2({
       placeholder: "Select Currency",
       allowClear: false
-    });
+    });*/
 
     function funSearchSuppliers() {
         $("#pageloader").fadeIn();
@@ -360,6 +374,13 @@
                 $("#box_width_cm").val(result.box_width_cm);
                 $("#box_length_cm").val(result.box_length_cm);
                 $("#box_depth_cm").val(result.box_depth_cm);
+                $("#supplier_code").val(result.supplier_code);
+                $("#supplier_barcode").val(result.supplier_barcode);
+                $("#currency").val(result.supplier_currency);
+                $("#old_price_currency").val(result.supplier_currency);
+                $("#new_price_currency").val(result.supplier_currency);
+                $("#price").val(result.supplier_price);
+                $("#qty").prop('min',result.min_order_quantity);
             }else{
                 $("#product_weight").val('');
                 $("#product_width").val('');
@@ -372,6 +393,13 @@
                 $("#box_width_cm").val('');
                 $("#box_length_cm").val('');
                 $("#box_depth_cm").val('');
+                $("#supplier_code").val('');
+                $("#supplier_barcode").val('');
+                $("#currency").val('');
+                $("#old_price_currency").val('');
+                $("#new_price_currency").val('');
+                $("#price").val('');
+                $("#qty").prop('min',0);
             }
           }
         });

@@ -105,9 +105,17 @@ class ItemController extends Controller
 
                 ->addColumn('item_img', function ($data) {
                     $path = $data->image;
-                    $type = pathinfo($path, PATHINFO_EXTENSION);
-                    $imagedata = @file_get_contents($path);
-                    if (strpos($http_response_header[0], "200")) { 
+                    if(empty($path)){
+                        $path = asset('public/image/no_image.jpg');
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $imagedata = @file_get_contents($path);
+                    }else{
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $imagedata = @file_get_contents($path);
+                    }
+
+                    
+                    if (strpos($imagedata[0], "200")) { 
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
                         return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
                     } else { 
@@ -234,6 +242,12 @@ class ItemController extends Controller
                                              'box_width_cm' => $request->box_width_cm,
                                              'box_length_cm' => $request->box_length_cm,
                                              'box_depth_cm' => $request->box_depth_cm,
+                                             'supplier_code' => $request->supplier_code,
+                                             'supplier_barcode' => $request->supplier_barcode,
+                                             'lead_time' => $request->lead_time,
+                                             'supplier_price' => $request->supplier_price,
+                                             'supplier_currency' => $request->supplier_currency,
+                                             'min_order_quantity' => $request->min_order_quantity,
                                             ]);
                 }
             }else{
@@ -260,6 +274,12 @@ class ItemController extends Controller
                                              'box_width_cm' => $request->box_width_cm,
                                              'box_length_cm' => $request->box_length_cm,
                                              'box_depth_cm' => $request->box_depth_cm,
+                                             'supplier_code' => $request->supplier_code,
+                                             'supplier_barcode' => $request->supplier_barcode,
+                                             'lead_time' => $request->lead_time,
+                                             'supplier_price' => $request->supplier_price,
+                                             'supplier_currency' => $request->supplier_currency,
+                                             'min_order_quantity' => $request->min_order_quantity,
                                             ]);
             }
 
@@ -355,6 +375,12 @@ class ItemController extends Controller
             $Supplier_has_item->box_width_cm = $request->box_width_cm;
             $Supplier_has_item->box_length_cm = $request->box_length_cm;
             $Supplier_has_item->box_depth_cm = $request->box_depth_cm;
+            $Supplier_has_item->supplier_code = $request->supplier_code;
+            $Supplier_has_item->supplier_barcode = $request->supplier_barcode;
+            $Supplier_has_item->lead_time = $request->lead_time;
+            $Supplier_has_item->supplier_price = $request->supplier_price;
+            $Supplier_has_item->supplier_currency = $request->supplier_currency;
+            $Supplier_has_item->min_order_quantity = $request->min_order_quantity;
             $Supplier_has_item->save();
 
             return response()->json([
