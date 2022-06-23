@@ -114,7 +114,7 @@
                         <div class="form-group">
                             <label>Supplier Code</label>
                             <div class="input-group">
-                                <input type="text" value="{{$supplier_item_dimensions->box_depth_cm}}" required id="supplier_code" name="supplier_code" class="form-control" placeholder="Supplier Code">
+                                <input type="text" value="{{$supplier_item_dimensions->supplier_code}}" required id="supplier_code" name="supplier_code" class="form-control" placeholder="Supplier Code">
                             </div>
                         </div>
 
