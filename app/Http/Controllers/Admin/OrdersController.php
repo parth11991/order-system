@@ -216,6 +216,12 @@ class OrdersController extends Controller
                         return $html; 
                     })
 
+                    ->addColumn('company_name', function ($data) {
+                        if(isset($data->company->name)){
+                            return $data->company->name;
+                        }
+                    })
+
                     ->addColumn('order_status', function ($data) {
                         if($data->status=='0'){ 
                             $class ='text-danger';    
@@ -273,7 +279,21 @@ class OrdersController extends Controller
                         
                     })
 
-                    ->rawColumns(['item_img','order_date','order_status','action'])
+                    ->addColumn('status_field', function ($data) {
+                        if($data->status=='0'){    
+                            $status= 'new order';
+                        }elseif ($data->status=='1') {
+                            $status= 'confirmed';
+                        }elseif ($data->status=='2') {
+                            $status= 'shipped';
+                        }else{
+                            $status= 'received';
+                        }
+
+                        return $status;
+                    })
+
+                    ->rawColumns(['item_img','company_name','order_date','order_status','action','status_field'])
 
                     ->make(true);
         }
@@ -515,16 +535,19 @@ class OrdersController extends Controller
                                          'box_depth_cm' => $request->box_depth_cm,
                                          'supplier_code' => $request->supplier_code,
                                          'supplier_barcode' => $request->supplier_barcode,
-                                         'lead_time' => 0,
                                          'supplier_price' => $request->price,
                                          'supplier_currency' => $request->currency,
-                                         'min_order_quantity' => 0,
                                         ];
 
 
             if(isset($item)){
-                Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->delete();
-                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+                $Supplier_has_item = Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->get();
+                if($Supplier_has_item>0){
+                    Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->update($supplier_item_dimensions);
+                }else{
+                    $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+                }
+                
             }else{
                 $item = new item();
                 $item->item_id = $StockItemId;
@@ -687,8 +710,12 @@ class OrdersController extends Controller
 
 
             if(isset($item)){
-                Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->delete();
-                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+                $Supplier_has_item = Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->get();
+                if($Supplier_has_item>0){
+                    Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->update($supplier_item_dimensions);
+                }else{
+                    $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+                }
             }else{
                 $item = new item();
                 $item->item_id = $StockItemId;

@@ -105,17 +105,9 @@ class ItemController extends Controller
 
                 ->addColumn('item_img', function ($data) {
                     $path = $data->image;
-                    if(empty($path)){
-                        $path = asset('public/image/no_image.jpg');
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $imagedata = @file_get_contents($path);
-                    }else{
-                        $type = pathinfo($path, PATHINFO_EXTENSION);
-                        $imagedata = @file_get_contents($path);
-                    }
-
-                    
-                    if (strpos($imagedata[0], "200")) { 
+                    $type = pathinfo($path, PATHINFO_EXTENSION);
+                    $imagedata = @file_get_contents($path);
+                    if (strpos($http_response_header[0], "200")) { 
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
                         return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
                     } else { 
