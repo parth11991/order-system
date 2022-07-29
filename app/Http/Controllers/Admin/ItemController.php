@@ -107,7 +107,8 @@ class ItemController extends Controller
                     $path = $data->image;
                     $type = pathinfo($path, PATHINFO_EXTENSION);
                     $imagedata = @file_get_contents($path);
-                    if (strpos($http_response_header[0], "200")) { 
+                    
+                    if (strpos($http_response_header[0], "200")!=false) { 
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
                         return '<img src="'.$base64.'" alt="Item Image" class="profile-user-img-small img-fluid" style="width: 70px;height: 60px;">';
                     } else { 

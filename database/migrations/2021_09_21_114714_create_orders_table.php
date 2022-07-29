@@ -24,7 +24,7 @@ class CreateOrdersTable extends Migration
             $table->date('due_date')->nullable();
             $table->string('image');
             $table->integer('qty');
-            $table->enum('status', ['0','1','2','3'])->default('0')->comment('0 = new order, 1 = confirmed, 2 = shipped, 3 = mark as received');
+            $table->enum('status', ['0','1','2','3','4','5'])->default('0')->comment('0 = new order, 1 = confirmed, 2 = shipped, 3 = mark as received, 4 = Quote, 5 = Approved');
             $table->unsignedBigInteger('supplier_id')->unsigned()->index();
             $table->unsignedBigInteger('created_by')->index();
             $table->unsignedBigInteger('updated_by')->index();

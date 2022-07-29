@@ -222,6 +222,7 @@ function exportTableToExcel(tableID, filename = ''){
 
 function funChangeStatus(id,status) {
     var checkRole = "{{auth()->user()->hasRole('supplier')}}";
+    //alert(checkRole);
     if(checkRole=="1"){
         $('#selected_status').val(status);
         $(".edit_"+id).click()

@@ -79,6 +79,9 @@ function datatables() {
         processing    : true,
         serverSide    : true,
         "bDestroy"    : true,
+        "language": {
+            processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw" style="top: 0px;"></i><span class="sr-only">Loading...</span> '
+        },
         pagingType    : "full_numbers",
         ajax          : {
             url     : '{{ url('admin/company/ajax/data') }}',

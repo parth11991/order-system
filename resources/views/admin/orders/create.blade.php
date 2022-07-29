@@ -89,7 +89,7 @@
                                     </select>
                                 </div>
                                 <div class="col-10">
-                                  <input type="number" min="0.00" value="" required id="price" name="price" class="form-control" placeholder="Price">
+                                  <input type="number" min="0.00" value="" id="price" name="price" class="form-control" placeholder="Price">
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                                     </select>
                                 </div>
                                 <div class="col-10">
-                                    <input type="number" min="0.00" value="" required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                                    <input type="number" min="0.00" value="" id="old_price" name="old_price" class="form-control" placeholder="Old Price">
                                 </div>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                                     </select>
                                 </div>
                                 <div class="col-10">
-                                    <input type="number" min="0.00" value="" required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                                    <input type="number" min="0.00" value="" id="new_price" name="new_price" class="form-control" placeholder="New Price">
                                 </div>
                             </div>
 
@@ -159,7 +159,7 @@
                         <div class="form-group">
                             <label>Product Width</label>
                             <div class="input-group">
-                                <input type="number" min="0.00" value="" required id="product_width" name="product_width" class="form-control" placeholder="Product Width">
+                                <input type="number" min="0.00" value="" id="product_width" name="product_width" class="form-control" placeholder="Product Width">
                             </div>
                         </div>
 
@@ -226,6 +226,11 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea id="notes" name="notes" class="form-control" required autofocus></textarea>  
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Create</button>
                         <a href="" class="btn btn-secondary"  data-dismiss="modal">Close</a>
                     </form>
@@ -273,6 +278,9 @@
       placeholder: "Select Supplier",
       allowClear: true
     });
+
+    //CKEDITOR for description
+    CKEDITOR.replace( 'notes' );
 
     /*$("#currency").select2({
       placeholder: "Select Currency",

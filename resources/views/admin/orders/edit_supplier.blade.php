@@ -38,23 +38,25 @@
                                 </div>
                             </div>
 
-                            <div class="form-group" style="display:none;">
+                            <div class="form-group">
                                 <label>Suppliers &nbsp;</label>
-                                <select class="form-control select2" id="supplier_id" name="supplier_id" required autocomplete="supplier_id" onchange="funGetSupplierItemDimensions(this.value)">
+                                <select disabled class="form-control select2" id="supplier" name="supplier" required autocomplete="supplier_id" onchange="funGetSupplierItemDimensions(this.value)">
                                     @foreach ($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}" @if($supplier->id==$order->supplier_id) selected @endif>{{ $supplier->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <input type="hidden" value="{{$order->supplier_id}}" id="supplier_id" name="supplier_id">
 
-                            <div class="form-group" style="display:none;">
+                            <div class="form-group">
                                 <label>Company &nbsp;</label>
-                                <select class="form-control select2" id="company_id" name="company_id" required autocomplete="company_id">
+                                <select disabled class="form-control select2" id="company" name="company" required autocomplete="company_id">
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}" @if($company->id==$order->company_id) selected @endif>{{ $company->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            <input type="hidden" value="{{$order->company_id}}" id="company_id" name="company_id">
 
                             <div class="form-group">
                                 <label>Price</label>
@@ -68,7 +70,7 @@
                                         </select>
                                     </div>
                                     <div class="col-10">
-                                        <input type="number" min="0.00" value="{{$order->price}}" required id="price" name="price" class="form-control" placeholder="Price">
+                                        <input type="number" value="{{$order->price}}" id="price" name="price" class="form-control" placeholder="Price">
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +87,7 @@
                                         </select>
                                     </div>
                                     <div class="col-10">
-                                        <input type="number" min="0.00" value="{{$order->old_price}}"  required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                                        <input type="number" value="{{$order->old_price}}" id="old_price" name="old_price" class="form-control" placeholder="Old Price">
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +104,7 @@
                                         </select>
                                     </div>
                                     <div class="col-10">
-                                        <input type="number" min="0.00" value="{{$order->new_price}}"  required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                                        <input type="number" value="{{$order->new_price}}" id="new_price" name="new_price" class="form-control" placeholder="New Price">
                                     </div>
                                 </div>
                             </div>
@@ -111,6 +113,19 @@
                                 <input type="number" name="qty" class="form-control" required autocomplete="qty" value="{{$order->qty}}" autofocus>
                             </div>  
                         
+                        <div class="form-group">
+                            <label>Supplier Code</label>
+                            <div class="input-group">
+                                <input type="text" value="{{$order->supplier_code}}" id="supplier_code" name="supplier_code" class="form-control" placeholder="Supplier Code">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Supplier Barcode</label>
+                            <div class="input-group">
+                                <input type="text" value="{{$order->supplier_barcode}}" id="supplier_barcode" name="supplier_barcode" class="form-control" placeholder="Supplier Barcode">
+                            </div>
+                        </div>
 
                         <div class="form-group" style="display:none;">
                             <label>Due Date</label>
@@ -120,6 +135,9 @@
                         <div class="form-group">
                             <label>Status &nbsp;</label>
                             <select class="form-control select2" id="status" name="status" required autocomplete="status">
+                                
+                                <option value="4" @if($order->status==4) selected @endif>quote</option>
+                                <option value="5" @if($order->status==5) selected @endif>approved</option>
                                 <option value="0" @if($order->status==0) selected @endif>new order</option>
                                 <option value="1" @if($order->status==1) selected @endif>confirmed</option>
                                 <option value="2" @if($order->status==2) selected @endif>shipped</option>
@@ -129,6 +147,90 @@
                                 @endif
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label>Product Weight</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="product_weight" name="product_weight" class="form-control" placeholder="Product Weight">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Width</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="product_width" name="product_width" class="form-control" placeholder="Product Width">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Length</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="product_length" name="product_length" class="form-control" placeholder="Product Length">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Product Depth</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="product_depth" name="product_depth" class="form-control" placeholder="Product Depth">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Inner Quantity</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="box_inner_quantity" name="box_inner_quantity" class="form-control" placeholder="Box Inner Quantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Outer Quantity</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="box_outer_quantity" name="box_outer_quantity" class="form-control" placeholder="Box Outer Quantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Weight Net Kg</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="box_weight_net_kg" name="box_weight_net_kg" class="form-control" placeholder="Box Weight Net Kg">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Weight Gross Kg</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="box_weight_gross_kg" name="box_weight_gross_kg" class="form-control" placeholder="Box Weight Gross Kg">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Width Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="box_width_cm" name="box_width_cm" class="form-control" placeholder="Box Width Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Length Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="box_length_cm" name="box_length_cm" class="form-control" placeholder="Box Length Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Box Depth Cm</label>
+                            <div class="input-group">
+                                <input type="number" min="0.00" value="" id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea id="notes" name="notes" class="form-control" required autofocus>{{$order->notes}}</textarea>  
+                        </div>
+
+
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a href="" class="btn btn-secondary"  data-dismiss="modal">Close</a>
                     </form>
@@ -138,6 +240,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     // jQuery Validation
     $(function(){
@@ -151,6 +254,7 @@
 
     function funSearchItems() {
         $("#pageloader").fadeIn();
+        $("#latest_order").hide();
         $.ajax({
           url : '{{ route('admin.order.ajax.search_items') }}',
           data: {
@@ -170,6 +274,26 @@
           }
         });
     }
+
+    /*$("#supplier_id").select2({
+      placeholder: "Select Supplier",
+      allowClear: true
+    });*/
+
+    /*$("#currency").select2({
+      placeholder: "Select Currency",
+      allowClear: false
+    });
+
+    $("#old_price_currency").select2({
+      placeholder: "Select Currency",
+      allowClear: false
+    });
+
+    $("#new_price_currency").select2({
+      placeholder: "Select Currency",
+      allowClear: false
+    });*/
 
     function funSearchSuppliers() {
         $("#pageloader").fadeIn();
@@ -191,43 +315,46 @@
             $("#pageloader").hide();
             $("#latest_order").fadeIn();
           }
-    });
+        });
 
-    $("#supplier_id").select2({
-      placeholder: "Select Supplier",
-      allowClear: true
-    });
 
-    $("#status").select2({
-      placeholder: "Select Status",
-      allowClear: true
-    });
-
-    $("#currency").select2({
-      placeholder: "Select Currency",
-      allowClear: false
-    });
-
-    $("#old_price_currency").select2({
-      placeholder: "Select Currency",
-      allowClear: false
-    });
-
-    $("#new_price_currency").select2({
-      placeholder: "Select Currency",
-      allowClear: false
-    });
-
-    @if(auth()->user()->hasRole('supplier'))
-    function selected_status(){
-        var selected_status = $('#selected_status').val();
-        $('#status').val(selected_status);
-        $('#status').trigger('change');
+        var url = "{{ url('admin/order/ajax/latest_order') }}";
+        var columns = [
+                            {data: 'item_img', name: 'item_img'},
+                            {data: 'supplier', name: 'supplier'},
+                            {data: 'company_name', name: 'company_name'},
+                            {data: 'sku', name: 'sku'},
+                            {data: 'item_title', name: 'item_title'},
+                            {data: 'price', name: 'price'},
+                            {data: 'qty', name: 'qty'},
+                            {data: 'due_date', name: 'due_date'},
+                            {data: 'order_date', name: 'order_date'},
+                            {data: 'order_status', name: 'order_status'},
+                        ];
+        
+        var table = $('#table_latest_order').DataTable({
+            dom: 'RBfrtip',
+            buttons: [],
+            select: true,
+            iDisplayLength: 5,
+            stateSave     : true,
+            responsive    : true,
+            fixedHeader   : true,
+            processing    : false,
+            serverSide    : true,
+            "bDestroy"    : true,
+            pagingType    : "full_numbers",
+            ajax          : {
+                url     : url,
+                dataType: 'json',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "keyword": $('#item').val()
+                }
+            },
+            columns       : columns,
+        });
     }
-    selected_status();
-    @endif
-
-    funGetSupplierItemDimensions({{ $order->supplier_id }});
 
     function funGetSupplierItemDimensions(user_id) {
         $.ajax({
@@ -241,6 +368,7 @@
           dataType: 'json',
           success: function( result )
           {
+            console.log(result);
             if (typeof result.id !== 'undefined') {
                 $("#product_weight").val(result.product_weight);
                 $("#product_width").val(result.product_width);
@@ -253,6 +381,13 @@
                 $("#box_width_cm").val(result.box_width_cm);
                 $("#box_length_cm").val(result.box_length_cm);
                 $("#box_depth_cm").val(result.box_depth_cm);
+                $("#supplier_code").val(result.supplier_code);
+                $("#supplier_barcode").val(result.supplier_barcode);
+                $("#currency").val(result.supplier_currency);
+                $("#old_price_currency").val(result.supplier_currency);
+                $("#new_price_currency").val(result.supplier_currency);
+                $("#price").val(result.supplier_price);
+                $("#qty").prop('min',result.min_order_quantity);
             }else{
                 $("#product_weight").val('');
                 $("#product_width").val('');
@@ -265,9 +400,32 @@
                 $("#box_width_cm").val('');
                 $("#box_length_cm").val('');
                 $("#box_depth_cm").val('');
+                $("#supplier_code").val('');
+                $("#supplier_barcode").val('');
+                $("#qty").prop('min',0);
             }
           }
         });
     }
+
+    /*$("#user_id").select2({
+      placeholder: "Select Supplier",
+      allowClear: true
+    });*/
+
+    //CKEDITOR for description
+    CKEDITOR.replace( 'notes' );
+
+    funGetSupplierItemDimensions({{ $order->supplier_id }});
+
+    @if(auth()->user()->hasRole('supplier'))
+    function selected_status(){
+        var selected_status = $('#selected_status').val();
+        $('#status').val(selected_status);
+        $('#status').trigger('change');
+    }
+    selected_status();
+    @endif
 </script>
+
 @endsection

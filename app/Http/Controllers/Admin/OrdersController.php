@@ -125,14 +125,22 @@ class OrdersController extends Controller
                     }elseif ($data->status=='2') {
                         $class= 'text-info';
                         $status= 'shipped';
-                    }else{
+                    }elseif ($data->status=='3') {
                         $class ='text-success';
                         $status= 'received';
+                    }elseif ($data->status=='4') {
+                        $class ='text-secondary';
+                        $status= 'quote';
+                    }else{
+                        $class ='text-primary';
+                        $status= 'approved';
                     }
 
                     return '<div class="dropdown action-label">
                             <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o '.$class.'"></i> '.$status.' </a>
                             <div class="dropdown-menu dropdown-menu-right" style="" class="noExport">
+                                <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',4); return false;"><i class="fa fa-dot-circle-o text-secondary"></i> quote</a>
+                                <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',5); return false;"><i class="fa fa-dot-circle-o text-primary"></i> approved</a>
                                 <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',0); return false;"><i class="fa fa-dot-circle-o text-danger"></i> new order</a>
                                 <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',1); return false;"><i class="fa fa-dot-circle-o text-warning"></i> confirmed</a>
                                 <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',2); return false;"><i class="fa fa-dot-circle-o text-info"></i> shipped</a>
@@ -148,8 +156,12 @@ class OrdersController extends Controller
                         $status= 'confirmed';
                     }elseif ($data->status=='2') {
                         $status= 'shipped';
-                    }else{
+                    }elseif ($data->status=='3') {
                         $status= 'received';
+                    }elseif ($data->status=='4') {
+                        $status= 'quote';
+                    }else{
+                        $status= 'approved';
                     }
 
                     return $status;
@@ -232,9 +244,15 @@ class OrdersController extends Controller
                         }elseif ($data->status=='2') {
                             $class= 'text-info';
                             $status= 'shipped';
-                        }else{
+                        }elseif ($data->status=='3') {
                             $class ='text-success';
                             $status= 'received';
+                        }elseif ($data->status=='4') {
+                            $class ='text-secondary';
+                            $status= 'quote';
+                        }else{
+                            $class ='text-primary';
+                            $status= 'approved';
                         }
 
                         $received = '';
@@ -246,6 +264,9 @@ class OrdersController extends Controller
                         return '<div class="dropdown action-label">
                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o '.$class.'"></i> '.$status.' </a>
                                 <div class="dropdown-menu dropdown-menu-right" style="">
+                                    
+                                    <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',4); return false;"><i class="fa fa-dot-circle-o text-secondary"></i> quote</a>
+                                    <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',5); return false;"><i class="fa fa-dot-circle-o text-primary"></i> approved</a>
                                     <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',0); return false;"><i class="fa fa-dot-circle-o text-danger"></i> new order</a>
                                     <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',1); return false;"><i class="fa fa-dot-circle-o text-warning"></i> confirmed</a>
                                     <a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.',2); return false;"><i class="fa fa-dot-circle-o text-info"></i> shipped</a>
@@ -253,7 +274,7 @@ class OrdersController extends Controller
                                     
                                 </div>
 
-                                <a href="'.  route('admin.order.edit', ['order' => $data->id]) .'" class="edit_'.$data->id.'"  id="popup-modal-button" style="display: none;"></a>
+                                <a href="'.  route('admin.order.edit_supplier', ['order' => $data->id]) .'" class="edit_'.$data->id.'"  id="popup-modal-button" style="display: none;"></a>
                             </div>';
                     })
 
@@ -286,8 +307,12 @@ class OrdersController extends Controller
                             $status= 'confirmed';
                         }elseif ($data->status=='2') {
                             $status= 'shipped';
-                        }else{
+                        }elseif ($data->status=='3') {
                             $status= 'received';
+                        }elseif ($data->status=='4') {
+                            $status= 'quote';
+                        }else{
+                            $status= 'approved';
                         }
 
                         return $status;
@@ -327,7 +352,7 @@ class OrdersController extends Controller
                         'token' => env('LINNWORKS_TOKEN'),
                     ], $this->client);
 
-        $getStockItems = $linnworks->Stock()->getStockItems($keyWord,"",5000,1,true,true,true);
+        $getStockItems = $linnworks->Stock()->getStockItems($keyWord,'',5000,1,true,true,true);
         $html='<div class="form-group">
                     <label>Select Item</label>
                     <select class="form-control select2" id="item" name="item" required autocomplete="name"  onchange="funSearchSuppliers()"><option value=""></option>';
@@ -382,6 +407,7 @@ class OrdersController extends Controller
      */
     public function get_supplier_item_dimensions(Request $request)
     {
+
         $item = item::where('item_id',$request->item)->first();
         $user_id = $request->user_id;
         $supplier_item_dimensions = Supplier_has_item::where('item_id',$item->id)->where('user_id',$user_id)->first();
@@ -414,9 +440,15 @@ class OrdersController extends Controller
                         }elseif ($data->status=='2') {
                             $class= 'text-info';
                             $status= 'shipped';
-                        }else{
+                        }elseif ($data->status=='3') {
                             $class ='text-success';
                             $status= 'received';
+                        }elseif ($data->status=='4') {
+                            $class ='text-secondary';
+                            $status= 'quote';
+                        }else{
+                            $class ='text-primary';
+                            $status= 'approved';
                         }
 
                         return '<div class="dropdown action-label">
@@ -515,6 +547,7 @@ class OrdersController extends Controller
             $orders->old_price_currency = $request->old_price_currency;
             $orders->new_price_currency = $request->new_price_currency;
             $orders->qty = $request->qty;
+            $orders->notes = $request->notes;
             //$orders->due_date = Carbon::parse($request->due_date);
             $orders->created_by = auth()->user()->id;
             $orders->updated_by = auth()->user()->id;
@@ -541,7 +574,7 @@ class OrdersController extends Controller
 
 
             if(isset($item)){
-                $Supplier_has_item = Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->get();
+                $Supplier_has_item = Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->count();
                 if($Supplier_has_item>0){
                     Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->update($supplier_item_dimensions);
                 }else{
@@ -683,6 +716,7 @@ class OrdersController extends Controller
             $order->new_price_currency = $request->new_price_currency;
             $order->qty = $request->qty;
             $order->due_date = Carbon::parse($request->due_date);
+            $order->notes = $request->notes;
             $order->status = $request->status;
             $order->updated_by = auth()->user()->id;
             $order->save();
@@ -710,7 +744,7 @@ class OrdersController extends Controller
 
 
             if(isset($item)){
-                $Supplier_has_item = Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->get();
+                $Supplier_has_item = Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->count();
                 if($Supplier_has_item>0){
                     Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->update($supplier_item_dimensions);
                 }else{
@@ -769,7 +803,7 @@ class OrdersController extends Controller
                 ]);   
             }
 
-            /*$StockItemId = $request->item;
+            $StockItemId = $request->item;
             $linnworks = Linnworks_API::make([
                         'applicationId' => env('LINNWORKS_APP_ID'),
                         'applicationSecret' => env('LINNWORKS_SECRET'),
@@ -799,7 +833,7 @@ class OrdersController extends Controller
                 $order->customer_sku = $itemExtendedProperties[0]['PropertyValue'];
             }else{
                 $order->customer_sku = $itemData['ItemNumber'];
-            }*/
+            }
             
             /*$order->supplier_id = $request->supplier_id;
             $order->company_id = $request->company_id;*/
@@ -812,16 +846,61 @@ class OrdersController extends Controller
             $order->qty = $request->qty;
             $order->due_date = Carbon::parse($request->due_date);
             $order->status = $request->status;
+            $order->notes = $request->notes;
             $order->updated_by = auth()->user()->id;
             //dd($order);
             $order->save();
 
+            $item = item::where('item_id',$StockItemId)->with(['users'])->first();
+            
+            $supplier_item_dimensions = ['product_weight' => $request->product_weight,
+                                         'product_width' => $request->product_width,
+                                         'product_length' => $request->product_length,
+                                         'product_depth' => $request->product_depth,
+                                         'box_inner_quantity' => $request->box_inner_quantity,
+                                         'box_outer_quantity' => $request->box_outer_quantity,
+                                         'box_weight_net_kg' => $request->box_weight_net_kg,
+                                         'box_weight_gross_kg' => $request->box_weight_gross_kg,
+                                         'box_width_cm' => $request->box_width_cm,
+                                         'box_length_cm' => $request->box_length_cm,
+                                         'box_depth_cm' => $request->box_depth_cm,
+                                         'supplier_code' => $request->supplier_code,
+                                         'supplier_barcode' => $request->supplier_barcode,
+                                         'lead_time' => 0,
+                                         'supplier_price' => $request->price,
+                                         'supplier_currency' => $request->currency,
+                                         'min_order_quantity' => 0,
+                                        ];
+
+
+            if(isset($item)){
+                $Supplier_has_item = Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->count();
+                if($Supplier_has_item>0){
+                    Supplier_has_item::where('item_id',$item->id)->where('user_id',$request->supplier_id)->update($supplier_item_dimensions);
+                }else{
+                    $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+                }
+            }else{
+                $item = new item();
+                $item->item_id = $StockItemId;
+                $item->sku = $itemData['ItemNumber'];
+                $item->title = $itemData['ItemTitle'];
+                if(isset($itemImage[0]['FullSource'])){
+                  $item->image = $itemImage[0]['FullSource'];  
+                }else{
+                  $item->image = asset("/public/image/no_image.jpg"); 
+                }
+                $item->save();
+
+                $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+            }
             //Session::flash('success', 'A branch updated successfully.');
             //return redirect('admin/branch');
 
             return response()->json([
                 'success' => 'order update successfully.' // for status 200
             ]);
+            
 
         } catch (\Exception $exception) {
 

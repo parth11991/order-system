@@ -68,7 +68,7 @@
                                         </select>
                                     </div>
                                     <div class="col-10">
-                                        <input type="number" min="0.00" value="{{$order->price}}" required id="price" name="price" class="form-control" placeholder="Price">
+                                        <input type="number" min="0.00" value="{{$order->price}}" id="price" name="price" class="form-control" placeholder="Price">
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                         </select>
                                     </div>
                                     <div class="col-10">
-                                        <input type="number" min="0.00" value="{{$order->old_price}}"  required id="old_price" name="old_price" class="form-control" placeholder="Old Price">
+                                        <input type="number" min="0.00" value="{{$order->old_price}}" id="old_price" name="old_price" class="form-control" placeholder="Old Price">
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                                         </select>
                                     </div>
                                     <div class="col-10">
-                                        <input type="number" min="0.00" value="{{$order->new_price}}"  required id="new_price" name="new_price" class="form-control" placeholder="New Price">
+                                        <input type="number" min="0.00" value="{{$order->new_price}}" id="new_price" name="new_price" class="form-control" placeholder="New Price">
                                     </div>
                                 </div>
                             </div>
@@ -133,6 +133,8 @@
                         <div class="form-group">
                             <label>Status &nbsp;</label>
                             <select class="form-control select2" id="status" name="status" required autocomplete="status">
+                                <option value="4" @if($order->status==4) selected @endif>quote</option>
+                                <option value="5" @if($order->status==5) selected @endif>approved</option>
                                 <option value="0" @if($order->status==0) selected @endif>new order</option>
                                 <option value="1" @if($order->status==1) selected @endif>confirmed</option>
                                 <option value="2" @if($order->status==2) selected @endif>shipped</option>
@@ -218,6 +220,11 @@
                             <div class="input-group">
                                 <input type="number" min="0.00" value="" id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea id="notes" name="notes" class="form-control" required autofocus>{{$order->notes}}</textarea>  
                         </div>
 
                         <button type="submit" class="btn btn-primary">Update</button>
@@ -390,10 +397,6 @@
                 $("#box_depth_cm").val('');
                 $("#supplier_code").val('');
                 $("#supplier_barcode").val('');
-                $("#currency").val('');
-                $("#old_price_currency").val('');
-                $("#new_price_currency").val('');
-                $("#price").val('');
                 $("#qty").prop('min',0);
             }
           }
@@ -404,6 +407,9 @@
       placeholder: "Select Supplier",
       allowClear: true
     });
+
+    //CKEDITOR for description
+    CKEDITOR.replace( 'notes' );
 
     funGetSupplierItemDimensions({{ $order->supplier_id }});
 </script>

@@ -97,6 +97,9 @@ function datatables() {
         serverSide    : true,
         "bDestroy"    : true,
         pagingType    : "full_numbers",
+        "language": {
+            processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw" style="top: 0px;"></i><span class="sr-only">Loading...</span> '
+        },
         ajax          : {
             url     : url,
             dataType: 'json'
