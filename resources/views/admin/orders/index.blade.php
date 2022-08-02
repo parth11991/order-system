@@ -46,6 +46,7 @@
                             <tr>   
                                 <th>Item Image</th> 
                                 <th>Company</th> 
+                                <th>Supplier</th> 
                                 <th>SKU</th>
                                 <th>Item Title</th>
                                 <th>Price</th>
@@ -78,11 +79,13 @@
 <script>
 function datatables() {
     var checkRole = "{{auth()->user()->hasRole('supplier')}}";
+    //alert(checkRole);
     if(checkRole=="1"){
         var url = "{{ url('admin/order/ajax/data_supplier') }}";
         var columns = [
                             {data: 'item_img', name: 'item_img'},
                             {data: 'company_name', name: 'company_name'},
+                            {data: 'supplier_name', name: 'supplier_name'},
                             {data: 'customer_sku', name: 'customer_sku'},
                             {data: 'item_title', name: 'item_title'},
                             {data: 'price', name: 'price'},
@@ -104,6 +107,7 @@ function datatables() {
         var columns = [
                             {data: 'item_img', name: 'item_img'},
                             {data: 'company_name', name: 'company_name'},
+                            {data: 'supplier_name', name: 'supplier_name'},
                             {data: 'sku', name: 'sku'},
                             {data: 'item_title', name: 'item_title'},
                             {data: 'price', name: 'price'},
@@ -129,7 +133,7 @@ function datatables() {
                         extend: 'pdf',
                         title: 'Order Data Export',
                         exportOptions: {
-                            columns: [ 0, 1, 2, 3,4,5,6,7,10 ],
+                            columns: [ 0, 1, 2, 3,4,5,6,7,8,11 ],
                             modifier: {
                                 search: 'applied',
                                 order: 'applied'
@@ -154,14 +158,14 @@ function datatables() {
                         extend: 'excel',
                         title: 'Order Data Export',
                         exportOptions: {
-                            columns: [ 1, 2, 3,4,5,6,7,10 ]
+                            columns: [ 1, 2, 3,4,5,6,7,8,11 ]
                         },
                         
                     }, {
                         extend: 'csv',
                         title: 'Order Data Export',
                         exportOptions: {
-                            columns: [ 1, 2, 3,4,5,6,7,10 ]
+                            columns: [ 1, 2, 3,4,5,6,7,8,11 ]
                         }
                     }
                 ],

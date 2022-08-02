@@ -89,18 +89,21 @@ class OrdersController extends Controller
             };
 
             if(auth()->user()->hasRole('superadmin')){
-                $model = orders::with(['creator','company']);
+                $model = orders::with(['creator','company','supplier']);
             }elseif(auth()->user()->hasRole('admin')){
-                $model = orders::with(['creator','company']);
+                $model = orders::with(['creator','company','supplier']);
             }else{
-                $model = orders::with(['creator','company'])->where('created_by', $user_id);
+                $model = orders::with(['creator','company','supplier'])->where('created_by', $user_id);
             }
 
             if($search!="%{}%"){
-                $model = $model->whereHas('company', $constraint)->orWhere('item_title', 'like', $search)->orWhere('sku', 'like', $search); 
+                $model = $model->whereHas('company', $constraint)->orWhereHas('supplier', $constraint)->where(function($query) use ($search) {
+                                    return $query->where('item_title', 'like', $search)
+                                    ->orWhere('sku', 'like', $search);
+                                 }); 
             }
             
-
+            
             return Datatables::eloquent($model)
                 ->addColumn('action', function (orders $data) {
                     $html='';
@@ -177,6 +180,12 @@ class OrdersController extends Controller
                     }
                 })
 
+                ->addColumn('supplier_name', function ($data) {
+                    if(isset($data->supplier->name)){
+                        return $data->supplier->name;
+                    }
+                })
+
                 ->addColumn('item_img', function ($data) {
                     $path = $data->image;
                     $type = pathinfo($path, PATHINFO_EXTENSION);
@@ -194,7 +203,7 @@ class OrdersController extends Controller
                     
                 })
 
-                ->rawColumns(['item_img','company_name','order_date','order_status','action','status_field'])
+                ->rawColumns(['item_img','company_name','order_date','order_status','action','status_field','supplier_name'])
 
                 ->make(true);
         }
@@ -212,7 +221,20 @@ class OrdersController extends Controller
         if ($request->ajax() == true) {
 
             $user_id = auth()->user()->id;
-            $model = orders::where('supplier_id', $user_id);
+            $search = "%{$request->search['value']}%";
+
+            $constraint = function ($query) use ($search){
+                $query->where('name', 'like', $search);
+            };
+
+            $model = orders::with(['creator','company','supplier'])->where('supplier_id', $user_id);
+
+            if($search!="%{}%"){
+                $model = $model->where(function($query) use ($search) {
+                                    return $query->where('item_title', 'like', $search)
+                                    ->orWhere('sku', 'like', $search);
+                                 });
+            }
 
             return Datatables::eloquent($model)
                     ->addColumn('action', function (orders $data) {
@@ -282,7 +304,12 @@ class OrdersController extends Controller
                         return Carbon::parse($data->created_at);
                     })
 
-                    
+                    ->addColumn('supplier_name', function ($data) {
+                        if(isset($data->supplier->name)){
+                            return $data->supplier->name;
+                        }
+                    })
+
                     ->addColumn('item_img', function ($data) {
                         $path = $data->image;
                         $type = pathinfo($path, PATHINFO_EXTENSION);
@@ -318,7 +345,7 @@ class OrdersController extends Controller
                         return $status;
                     })
 
-                    ->rawColumns(['item_img','company_name','order_date','order_status','action','status_field'])
+                    ->rawColumns(['item_img','company_name','order_date','order_status','action','status_field','supplier_name'])
 
                     ->make(true);
         }
