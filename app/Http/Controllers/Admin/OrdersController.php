@@ -96,14 +96,16 @@ class OrdersController extends Controller
                 $model = orders::with(['creator','company','supplier'])->where('created_by', $user_id);
             }
 
-            if($search!="%{}%"){
-                $model = $model->whereHas('company', $constraint)->orWhereHas('supplier', $constraint)->where(function($query) use ($search) {
+            if($search!="%%"){
+                $model =  $model->whereHas('company', $constraint)
+                                ->orWhereHas('supplier', $constraint)
+                                ->orWhere(function($query) use ($search) {
                                     return $query->where('item_title', 'like', $search)
                                     ->orWhere('sku', 'like', $search);
                                  }); 
             }
             
-            
+
             return Datatables::eloquent($model)
                 ->addColumn('action', function (orders $data) {
                     $html='';
@@ -223,13 +225,14 @@ class OrdersController extends Controller
             $user_id = auth()->user()->id;
             $search = "%{$request->search['value']}%";
 
-            $constraint = function ($query) use ($search){
-                $query->where('name', 'like', $search);
-            };
-
             $model = orders::with(['creator','company','supplier'])->where('supplier_id', $user_id);
 
-            if($search!="%{}%"){
+            if($search!="%%"){
+
+                $constraint = function ($query) use ($search){
+                    $query->where('name', 'like', $search);
+                };
+
                 $model = $model->where(function($query) use ($search) {
                                     return $query->where('item_title', 'like', $search)
                                     ->orWhere('sku', 'like', $search);
