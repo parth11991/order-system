@@ -20,7 +20,7 @@ class CreateOrdersTable extends Migration
             $table->string('customer_sku');
             
             $table->string('item_title');
-            $table->decimal('price', 9, 2);
+            $table->decimal('price', 9, 2)->nullable();
             $table->date('due_date')->nullable();
             $table->string('image');
             $table->integer('qty');

@@ -16,9 +16,9 @@ class AddPriceToOrdersTable extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->decimal('new_price', 9, 2)->default(0)->nullable();
             $table->decimal('old_price', 9, 2)->default(0)->nullable();
-            $table->string('currency')->default('GBP');
-            $table->string('old_price_currency')->default('GBP');
-            $table->string('currency')->default('GBP');
+            $table->string('currency')->default('GBP')->nullable();
+            $table->string('old_price_currency')->default('GBP')->nullable();
+            $table->string('currency')->default('GBP')->nullable();
         });
     }
 
