@@ -15,7 +15,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{ route('admin.order.store') }}" method="post" id="popup-form" class="mt-4">
+                    <form action="{{ route('admin.order.store') }}" method="post" id="popup-form" class="mt-4" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label>Search Item</label>
@@ -224,6 +224,11 @@
                             <div class="input-group">
                                 <input type="number" min="0.00" value="" id="box_depth_cm" name="box_depth_cm" class="form-control" placeholder="Box Depth Cm">
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Order Files</label>
+                            <input name="order_files[]" id="files" type="file" multiple="multiple" />
                         </div>
 
                         <div class="form-group">

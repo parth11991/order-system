@@ -7,6 +7,7 @@ use App\Company;
 use App\User;
 use App\item;
 use App\Supplier_has_item;
+use App\OrdersFiles;
 
 use App\Http\Controllers\Controller;
 use App\Traits\UploadTrait;
@@ -23,6 +24,8 @@ use Onfuro\Linnworks\Linnworks as Linnworks_API;
 use Carbon\Carbon;
 use Notification;
 use Redirect;
+use Illuminate\Support\Facades\Hash;
+use File;
 
 class OrdersController extends Controller
 {
@@ -542,7 +545,6 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         try {
-
             $StockItemId = $request->item;
 
             $linnworks = Linnworks_API::make([
@@ -637,23 +639,44 @@ class OrdersController extends Controller
             }
             
 
-            //Session::flash('success', 'folder settings was created successfully.');
-            //return redirect()->route('print_buttons.index');
+            for ($x = 0; $x < $request->TotalFiles; $x++) 
+            {
+               if ($request->hasFile('files'.$x)) 
+                {
+                    $file      = $request->file('files'.$x);
+                    $Size = $file->getSize();
+                    $type = $file->extension();
+                    $file_name = time().rand(1,100).'.'.$type;
+                    $file->move(public_path('order_files'), $file_name);  
+                    $OrdersFiles = new OrdersFiles();
+                    $OrdersFiles->file_name = $file_name;
+                    $OrdersFiles->originalname = $file->getClientOriginalName();
+                    $OrdersFiles->size = $Size;
+                    $OrdersFiles->type = $type;
+                    $OrdersFiles->order_id = $orders->id;
+                    $OrdersFiles->created_by = auth()->user()->id;
+                    $OrdersFiles->updated_by = auth()->user()->id;
+                    $OrdersFiles->save();
+                }
+            }
+
+            /*Session::flash('success', 'order was created successfully.');
+            return redirect()->back();*/
 
             return response()->json([
                 'success' => 'Order was created successfully.' // for status 200
             ]);
 
         } catch (\Exception $exception) {
-
+            dd($exception);
             DB::rollBack();
 
-            //Session::flash('failed', $exception->getMessage() . ' ' . $exception->getLine());
-            /*return redirect()->back()->withInput($request->all());*/
+            Session::flash('failed', $exception->getMessage() . ' ' . $exception->getLine());
+            return redirect()->back()->withInput($request->all());
 
-            return response()->json([
+            /*return response()->json([
                 'error' => $exception->getMessage() . ' ' . $exception->getLine() // for status 200
-            ]);
+            ]);*/
         }
     }
 

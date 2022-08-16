@@ -51,11 +51,30 @@ $(document).ready(function () {
         e.preventDefault();
         var url = $(this).attr('action');
         $("#pageloader").fadeIn();
+
+        var form = $(this).serializeArray();
+        
+        var data = new FormData(); // Creating object of FormData class
+        for (var i = 0; i < form.length; i++) {
+            data.append(form[i].name, form[i].value);
+        }
+        
+        let TotalFiles = $('#files')[0].files.length; //Total files
+        let files = $('#files')[0];
+        for (let i = 0; i < TotalFiles; i++) {
+            data.append('files' + i, files.files[i]);
+        }
+        
+        data.append('TotalFiles', TotalFiles);
+        
         $.ajax({
             method: "POST",
             url: url,
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data: $(this).serialize(),
+            data: data,
+            cache:false,
+            contentType: false,
+            processData: false,
             success: function(message){
                 $("#popup-modal").modal('hide');
                 alert_message(message);
