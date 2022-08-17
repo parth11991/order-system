@@ -61,4 +61,12 @@ class orders extends Model
     {
         return $this->belongsToMany(User::class, 'user_has_orders', 'order_id','user_id');
     }
+
+    /**
+     * Get the order files.
+    */
+    public function order_files()
+    {
+        return $this->hasMany(OrdersFiles::class, 'order_id');
+    }
 }

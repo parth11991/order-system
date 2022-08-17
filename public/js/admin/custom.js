@@ -59,13 +59,16 @@ $(document).ready(function () {
             data.append(form[i].name, form[i].value);
         }
         
-        let TotalFiles = $('#files')[0].files.length; //Total files
-        let files = $('#files')[0];
-        for (let i = 0; i < TotalFiles; i++) {
-            data.append('files' + i, files.files[i]);
-        }
+        if ( $('#files').length){
+            let TotalFiles = $('#files')[0].files.length; //Total files
+            let files = $('#files')[0];
+            for (let i = 0; i < TotalFiles; i++) {
+                data.append('files' + i, files.files[i]);
+            }
+            
+            data.append('TotalFiles', TotalFiles);
         
-        data.append('TotalFiles', TotalFiles);
+        }
         
         $.ajax({
             method: "POST",

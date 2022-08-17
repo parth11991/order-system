@@ -586,3 +586,18 @@ ol li {
     
 }
 
+.user-add-shedule-list h2 a {
+    color: #ff5c6c;
+}
+
+.user-add-shedule-list h2.table-avatar {
+    align-items: center;
+    display: inline-flex;
+    font-size: inherit;
+    /* font-weight: 400; */
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+

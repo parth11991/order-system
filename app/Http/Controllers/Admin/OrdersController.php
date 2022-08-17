@@ -113,12 +113,14 @@ class OrdersController extends Controller
                 ->addColumn('action', function (orders $data) {
                     $html='';
                     if (auth()->user()->can('edit order')){
-                        $html.= '<a href="'.  route('admin.order.edit', ['order' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-3"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
+                        $html.= '<a href="'.  route('admin.order.edit', ['order' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-1"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
                     }
 
                     if (auth()->user()->can('delete order')){
-                        $html.= '<form method="post" class="float-left delete-form" action="'.  route('admin.order.destroy', ['order' => $data->id ]) .'"><input type="hidden" name="_token" value="'. Session::token() .'"><input type="hidden" name="_method" value="delete"><button type="submit" class="btn btn-danger btn-sm"><span tooltip="Delete" flow="up"><i class="fas fa-trash"></i></span></button></form>';
+                        $html.= '<form method="post" class="float-left delete-form mr-1" action="'.  route('admin.order.destroy', ['order' => $data->id ]) .'"><input type="hidden" name="_token" value="'. Session::token() .'"><input type="hidden" name="_method" value="delete"><button type="submit" class="btn btn-danger btn-sm"><span tooltip="Delete" flow="up"><i class="fas fa-trash"></i></span></button></form>';
                     }
+
+                    $html.= '<a href="'.  route('admin.order.show', ['order' => $data->id]) .'" class="btn btn-danger btn-sm float-left mr-1"  id="popup-modal-button"><span tooltip="Show" flow="left"><i class="fas fa-eye"></i></span></a>';
 
                     return $html; 
                 })
@@ -688,7 +690,39 @@ class OrdersController extends Controller
      */
     public function show(orders $order)
     {
-        //
+        //dd($order);
+        $path = $order->image;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $imagedata = @file_get_contents($path);
+        if (strpos($http_response_header[0], "200")) { 
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+        } else { 
+            $path = asset('public/image/no_image.jpg');
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $imagedata = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($imagedata);
+        } 
+
+        if($order->status=='0'){ 
+            $class ='text-danger';    
+            $status= 'new order';
+        }elseif ($order->status=='1') {
+            $class= 'text-warning';
+            $status= 'confirmed';
+        }elseif ($order->status=='2') {
+            $class= 'text-info';
+            $status= 'shipped';
+        }elseif ($order->status=='3') {
+            $class ='text-success';
+            $status= 'received';
+        }elseif ($order->status=='4') {
+            $class ='text-secondary';
+            $status= 'quote';
+        }else{
+            $class ='text-primary';
+            $status= 'approved';
+        }
+        return view('admin.orders.show', compact("order","base64","class","status"));
     }
 
     /**
