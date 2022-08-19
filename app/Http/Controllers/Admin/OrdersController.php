@@ -258,12 +258,14 @@ class OrdersController extends Controller
                     ->addColumn('action', function (orders $data) {
                         $html='';
                         if (auth()->user()->can('edit order')){
-                            $html.= '<a href="'.  route('admin.order.edit_supplier', ['order' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-3"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
+                            $html.= '<a href="'.  route('admin.order.edit_supplier', ['order' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-1"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
                         }
 
                         /*if (auth()->user()->can('delete order')){
                             $html.= '<form method="post" class="float-left delete-form" action="'.  route('admin.order.destroy', ['order' => $data->id ]) .'"><input type="hidden" name="_token" value="'. Session::token() .'"><input type="hidden" name="_method" value="delete"><button type="submit" class="btn btn-danger btn-sm"><span tooltip="Delete" flow="up"><i class="fas fa-trash"></i></span></button></form>';
                         }*/
+
+                        $html.= '<a href="'.  route('admin.order.show', ['order' => $data->id]) .'" class="btn btn-danger btn-sm float-left mr-1"  id="popup-modal-button"><span tooltip="Show" flow="left"><i class="fas fa-eye"></i></span></a>';
 
                         return $html; 
                     })
@@ -861,6 +863,27 @@ class OrdersController extends Controller
 
                 $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
             }
+
+            for ($x = 0; $x < $request->TotalFiles; $x++) 
+            {
+               if ($request->hasFile('files'.$x)) 
+                {
+                    $file      = $request->file('files'.$x);
+                    $Size = $file->getSize();
+                    $type = $file->extension();
+                    $file_name = time().rand(1,100).'.'.$type;
+                    $file->move(public_path('order_files'), $file_name);  
+                    $OrdersFiles = new OrdersFiles();
+                    $OrdersFiles->file_name = $file_name;
+                    $OrdersFiles->originalname = $file->getClientOriginalName();
+                    $OrdersFiles->size = $Size;
+                    $OrdersFiles->type = $type;
+                    $OrdersFiles->order_id = $order->id;
+                    $OrdersFiles->created_by = auth()->user()->id;
+                    $OrdersFiles->updated_by = auth()->user()->id;
+                    $OrdersFiles->save();
+                }
+            }
             //Session::flash('success', 'A branch updated successfully.');
             //return redirect('admin/branch');
 
@@ -990,6 +1013,27 @@ class OrdersController extends Controller
                 $item->save();
 
                 $item->users()->attach($request->supplier_id,$supplier_item_dimensions);
+            }
+
+            for ($x = 0; $x < $request->TotalFiles; $x++) 
+            {
+               if ($request->hasFile('files'.$x)) 
+                {
+                    $file      = $request->file('files'.$x);
+                    $Size = $file->getSize();
+                    $type = $file->extension();
+                    $file_name = time().rand(1,100).'.'.$type;
+                    $file->move(public_path('order_files'), $file_name);  
+                    $OrdersFiles = new OrdersFiles();
+                    $OrdersFiles->file_name = $file_name;
+                    $OrdersFiles->originalname = $file->getClientOriginalName();
+                    $OrdersFiles->size = $Size;
+                    $OrdersFiles->type = $type;
+                    $OrdersFiles->order_id = $order->id;
+                    $OrdersFiles->created_by = auth()->user()->id;
+                    $OrdersFiles->updated_by = auth()->user()->id;
+                    $OrdersFiles->save();
+                }
             }
             //Session::flash('success', 'A branch updated successfully.');
             //return redirect('admin/branch');

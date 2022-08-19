@@ -15,7 +15,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{ route('admin.order.update', ['order' => $order->id]) }}" method="put"  id="popup-form" >
+                    <form action="{{ route('admin.order.update', ['order' => $order->id]) }}" method="put"  id="popup-form" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div @if(auth()->user()->hasRole('supplier')) style="display:none;" @endif>
@@ -222,6 +222,11 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label>Order Files</label>
+                            <input name="order_files[]" id="files" type="file" multiple="multiple" />
+                        </div>
+                        
                         <div class="form-group">
                             <label>Notes</label>
                             <textarea id="notes" name="notes" class="form-control" required autofocus>{{$order->notes}}</textarea>  

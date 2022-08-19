@@ -58,7 +58,7 @@
                         <label>Order Note</label>
                         {!!$order->notes?$order->notes : 'N/A'!!}
                     </div>
-
+                    @if(count($order->order_files)>0)
                     <div class="form-group">
                         <label>Order File</label>
                         <table class="table table-hover dataTable no-footer" id="table_order_files" width="100%">
@@ -82,7 +82,7 @@
                             </tbody>
                         </table>
                     </div>
-
+                    @endif
                 </div>
                 <!-- /.card-body -->
             </div>

@@ -55,9 +55,9 @@
                                 <th>Order Date</th>
                                 <th class="noExport">Status</th>
                                 @if(!auth()->user()->hasRole('supplier'))
-                                <th class="noExport" style="width: 120px;">Action</th>
+                                <th class="noExport" style="width: 130px;">Action</th>
                                 @else
-                                <th class="noExport" style="width: 120px;">Action</th>
+                                <th class="noExport" style="width: 130px;">Action</th>
                                 @endif
 
                                 <th>Status</th>
