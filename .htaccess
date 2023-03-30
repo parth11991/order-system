@@ -1,3 +1,4 @@
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
@@ -6,7 +7,7 @@
     RewriteEngine On
 
     # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
+    RewriteCond %{HTTP:Authorization} ^(.+)$
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
     # Redirect Trailing Slashes If Not A Folder...
@@ -17,5 +18,50 @@
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    RewriteRule ^ project.php [L]
+
 </IfModule>
+
+# Deny access to .php files in the root folder
+#<FilesMatch "\.(php)$">
+#  Order allow,deny
+#  Deny from all
+#</FilesMatch>
+
+#disable directory browsing
+Options -Indexes
+
+#PROTECT env file
+<Files .env>
+order allow,deny
+Deny from all
+</Files>
+
+#PROTECT htaccess file
+<Files .htaccess>
+order allow,deny
+Deny from all
+</Files>
+
+<Files ~ "\.xml$">
+ Order allow,deny
+ Deny from all
+ Satisfy all
+</Files> 
+
+<Files ~ "\.txt$">
+ Order allow,deny
+ Deny from all
+ Satisfy all
+</Files> 
+
+#PROTECT state.php file
+<Files state.php>
+order allow,deny
+Deny from all
+</Files>
+
+<Files index.php>
+order allow,deny
+Deny from all
+</Files>
